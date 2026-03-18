@@ -1,1 +1,166 @@
-<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><style type="text/css">ol{margin:0;padding:0}table td,table th{padding:0}.c0{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Arial";font-style:normal}.c1{padding-top:0pt;padding-bottom:0pt;line-height:1.15;orphans:2;widows:2;text-align:left}.c2{background-color:#ffffff;max-width:468pt;padding:72pt 72pt 72pt 72pt}.c3{height:11pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style></head><body class="c2 doc-content"><p class="c1"><span class="c0">&lt;!DOCTYPE html&gt;</span></p><p class="c1"><span class="c0">&lt;html lang=&quot;en&quot;&gt;</span></p><p class="c1"><span class="c0">&lt;head&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;meta charset=&quot;UTF-8&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;title&gt;&#127797; RateMyCactus.com - GLOBAL EDITION &#127797;&lt;/title&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;style&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; body { background-color: #008080; background-image: url(&#39;https://www.transparenttextures.com/patterns/cubes.png&#39;); font-family: &quot;Comic Sans MS&quot;, sans-serif; color: #fff; text-align: center; padding: 20px; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; #main-window { background-color: #c0c0c0; color: #000; width: 95%; max-width: 500px; margin: 0 auto; border: 3px ridge #fff; box-shadow: 10px 10px 0px rgba(0,0,0,0.5); }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .title-bar { background: linear-gradient(90deg, #000080, #1084d0); color: white; padding: 5px 10px; display: flex; justify-content: space-between; font-size: 14px; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .content { padding: 20px; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .cactus-display { background: #fff; border: 2px inset #eee; padding: 10px; margin-bottom: 15px; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; #cactus-img { width: 100%; height: 300px; object-fit: contain; border: 1px solid #000; background: #333; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .score-box { background: #ffff00; border: 2px dashed #ff0000; padding: 10px; margin: 10px 0; font-size: 1.5em; font-weight: bold; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .btn-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; button { cursor: pointer; background: #d4d0c8; border: 2px outset #fff; font-weight: bold; padding: 10px 2px; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; button:active { border: 2px inset #fff; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; #next-btn { display: none; width: 100%; background: #00ff00; color: #000; font-size: 1.2em; margin-top: 10px; padding: 15px; border: 3px outset #fff; cursor: pointer; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;/style&gt;</span></p><p class="c1"><span class="c0">&lt;/head&gt;</span></p><p class="c1"><span class="c0">&lt;body&gt;</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;div id=&quot;main-window&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;title-bar&quot;&gt;&lt;span&gt;CactusVote_Global.exe&lt;/span&gt;&lt;span&gt;[X]&lt;/span&gt;&lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;content&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div id=&quot;nav-info&quot; style=&quot;font-size: 12px; margin-bottom: 5px;&quot;&gt;&lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;cactus-display&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;img id=&quot;cactus-img&quot; src=&quot;&quot; alt=&quot;Cactus&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;h2 id=&quot;cactus-name&quot;&gt;---&lt;/h2&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div id=&quot;rating-ui&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;strong&gt;Global Rating:&lt;/strong&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;btn-grid&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(1)&quot;&gt;1&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(2)&quot;&gt;2&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(3)&quot;&gt;3&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(4)&quot;&gt;4&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(5)&quot;&gt;5&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(6)&quot;&gt;6&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(7)&quot;&gt;7&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(8)&quot;&gt;8&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(9)&quot;&gt;9&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button onclick=&quot;castVote(10)&quot;&gt;10&lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div id=&quot;stats-ui&quot; style=&quot;display:none;&quot;&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;score-box&quot;&gt;WORLDWIDE VOTES: &lt;span id=&quot;count-display&quot;&gt;0&lt;/span&gt;&lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button id=&quot;next-btn&quot; onclick=&quot;nextCactus()&quot;&gt;NEXT CACTUS &gt;&gt; &lt;/button&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&lt;script&gt;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; // UNIQUE NAMESPACE: Change this to something totally random to start fresh</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; const NAMESPACE = &quot;texasron_global_cactus_v1&quot;;</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; const cactusList = [</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; { id: &quot;cac1&quot;, name: &quot;Cactus #1&quot;, img: &quot;1.jpg&quot; },</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; { id: &quot;cac2&quot;, name: &quot;Cactus #2&quot;, img: &quot;2.jpg&quot; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; ];</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; let currentIndex = 0;</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; async function loadCactus() {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const c = cactusList[currentIndex];</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Use the absolute URL of your images from Neocities if you want to keep hosting IMAGES there</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Or keep them local if you move the files to the new host</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;cactus-img&#39;).src = c.img; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;cactus-name&#39;).innerText = c.name;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;nav-info&#39;).innerText = `CACTUS ${currentIndex + 1} OF ${cactusList.length}`;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;rating-ui&#39;).style.display = &#39;block&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;stats-ui&#39;).style.display = &#39;none&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // FETCH GLOBAL DATA</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; try {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}`);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const data = await res.json();</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;count-display&#39;).innerText = data.value || 0;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; } catch (e) {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;count-display&#39;).innerText = &quot;0&quot;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; async function castVote(score) {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const c = cactusList[currentIndex];</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; try {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}/up`);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const data = await res.json();</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;count-display&#39;).innerText = data.value;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;rating-ui&#39;).style.display = &#39;none&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;stats-ui&#39;).style.display = &#39;block&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;next-btn&#39;).style.display = &#39;block&#39;;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; } catch (e) {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alert(&quot;Connection error! This host might still be blocking the API.&quot;);</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; function nextCactus() {</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; currentIndex = (currentIndex + 1) % cactusList.length;</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; loadCactus();</span></p><p class="c1"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1 c3"><span class="c0"></span></p><p class="c1"><span class="c0">&nbsp; &nbsp; loadCactus();</span></p><p class="c1"><span class="c0">&lt;/script&gt;</span></p><p class="c1"><span class="c0">&lt;/body&gt;</span></p><p class="c1"><span>&lt;/html&gt;</span></p><p class="c1 c3"><span class="c0"></span></p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌵 RateMyCactus.com - GLOBAL EDITION 🌵</title>
+    <style>
+        body { 
+            background-color: #008080; 
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); 
+            font-family: "Comic Sans MS", sans-serif; 
+            color: #fff; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        #main-window { 
+            background-color: #c0c0c0; 
+            color: #000; 
+            width: 95%; 
+            max-width: 500px; 
+            margin: 0 auto; 
+            border: 3px ridge #fff; 
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.5); 
+        }
+        .title-bar { 
+            background: linear-gradient(90deg, #000080, #1084d0); 
+            color: white; 
+            padding: 5px 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 14px; 
+        }
+        .content { padding: 20px; }
+        .cactus-display { 
+            background: #fff; 
+            border: 2px inset #eee; 
+            padding: 10px; 
+            margin-bottom: 15px; 
+        }
+        #cactus-img { 
+            width: 100%; 
+            height: 300px; 
+            object-fit: contain; 
+            border: 1px solid #000; 
+            background: #333; 
+        }
+        .score-box { 
+            background: #ffff00; 
+            border: 2px dashed #ff0000; 
+            padding: 10px; 
+            margin: 10px 0; 
+            font-size: 1.5em; 
+            font-weight: bold; 
+        }
+        .btn-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 5px; 
+        }
+        button { 
+            cursor: pointer; 
+            background: #d4d0c8; 
+            border: 2px outset #fff; 
+            font-weight: bold; 
+            padding: 10px 2px; 
+        }
+        button:active { border: 2px inset #fff; }
+        #next-btn { 
+            display: none; 
+            width: 100%; 
+            background: #00ff00; 
+            color: #000; 
+            font-size: 1.2em; 
+            margin-top: 10px; 
+            padding: 15px; 
+            border: 3px outset #fff; 
+            cursor: pointer; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-window">
+        <div class="title-bar"><span>CactusVote_Global.exe</span><span>[X]</span></div>
+        <div class="content">
+            <div id="nav-info" style="font-size: 12px; margin-bottom: 5px;"></div>
+            <div class="cactus-display">
+                <img id="cactus-img" src="" alt="Cactus">
+                <h2 id="cactus-name">---</h2>
+            </div>
+
+            <div id="rating-ui">
+                <strong>Global Rating:</strong>
+                <div class="btn-grid">
+                    <button onclick="castVote(1)">1</button>
+                    <button onclick="castVote(2)">2</button>
+                    <button onclick="castVote(3)">3</button>
+                    <button onclick="castVote(4)">4</button>
+                    <button onclick="castVote(5)">5</button>
+                    <button onclick="castVote(6)">6</button>
+                    <button onclick="castVote(7)">7</button>
+                    <button onclick="castVote(8)">8</button>
+                    <button onclick="castVote(9)">9</button>
+                    <button onclick="castVote(10)">10</button>
+                </div>
+            </div>
+
+            <div id="stats-ui" style="display:none;">
+                <div class="score-box">WORLDWIDE VOTES: <span id="count-display">0</span></div>
+                <button id="next-btn" onclick="nextCactus()">NEXT CACTUS >> </button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const NAMESPACE = "texasron_global_cactus_v1";
+
+    const cactusList = [
+        { id: "cac1", name: "Cactus #1", img: "1.jpg" },
+        { id: "cac2", name: "Cactus #2", img: "2.jpg" }
+    ];
+
+    let currentIndex = 0;
+
+    async function loadCactus() {
+        const c = cactusList[currentIndex];
+        document.getElementById('cactus-img').src = c.img; 
+        document.getElementById('cactus-name').innerText = c.name;
+        document.getElementById('nav-info').innerText = `CACTUS ${currentIndex + 1} OF ${cactusList.length}`;
+        
+        document.getElementById('rating-ui').style.display = 'block';
+        document.getElementById('stats-ui').style.display = 'none';
+        
+        try {
+            const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}`);
+            const data = await res.json();
+            document.getElementById('count-display').innerText = data.value || 0;
+        } catch (e) {
+            document.getElementById('count-display').innerText = "0";
+        }
+    }
+
+    async function castVote(score) {
+        const c = cactusList[currentIndex];
+        try {
+            const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}/up`);
+            const data = await res.json();
+            document.getElementById('count-display').innerText = data.value;
+            
+            document.getElementById('rating-ui').style.display = 'none';
+            document.getElementById('stats-ui').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+        } catch (e) {
+            alert("Connection error!");
+        }
+    }
+
+    function nextCactus() {
+        currentIndex = (currentIndex + 1) % cactusList.length;
+        loadCactus();
+    }
+
+    loadCactus();
+</script>
+</body>
+</html>
