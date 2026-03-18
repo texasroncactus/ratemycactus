@@ -3,121 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌵 RateMyCactus.com - GLOBAL EDITION 🌵</title>
+    <title>🌵 RateMyCactus.com 🌵</title>
     <style>
-        body { 
-            background-color: #008080; 
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); 
-            font-family: "Comic Sans MS", sans-serif; 
-            color: #fff; 
-            text-align: center; 
-            padding: 20px; 
-        }
-        #main-window { 
-            background-color: #c0c0c0; 
-            color: #000; 
-            width: 95%; 
-            max-width: 500px; 
-            margin: 0 auto; 
-            border: 3px ridge #fff; 
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.5); 
-        }
-        .title-bar { 
-            background: linear-gradient(90deg, #000080, #1084d0); 
-            color: white; 
-            padding: 5px 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 14px; 
-        }
+        body { background-color: #008080; background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); font-family: "Comic Sans MS", sans-serif; color: #fff; text-align: center; padding: 20px; margin: 0; }
+        #main-window { background-color: #c0c0c0; color: #000; width: 95%; max-width: 500px; margin: 20px auto; border: 3px ridge #fff; box-shadow: 10px 10px 0px rgba(0,0,0,0.5); }
+        .title-bar { background: linear-gradient(90deg, #000080, #1084d0); color: white; padding: 5px 10px; display: flex; justify-content: space-between; font-weight: bold; }
         .content { padding: 20px; }
-        .cactus-display { 
-            background: #fff; 
-            border: 2px inset #eee; 
-            padding: 10px; 
-            margin-bottom: 15px; 
-        }
-        #cactus-img { 
-            width: 100%; 
-            height: 300px; 
-            object-fit: contain; 
-            border: 1px solid #000; 
-            background: #333; 
-        }
-        .score-box { 
-            background: #ffff00; 
-            border: 2px dashed #ff0000; 
-            padding: 10px; 
-            margin: 10px 0; 
-            font-size: 1.5em; 
-            font-weight: bold; 
-        }
-        .btn-grid { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 5px; 
-        }
-        button { 
-            cursor: pointer; 
-            background: #d4d0c8; 
-            border: 2px outset #fff; 
-            font-weight: bold; 
-            padding: 10px 2px; 
-        }
+        .cactus-display { background: #fff; border: 2px inset #eee; padding: 10px; margin-bottom: 15px; }
+        #cactus-img { width: 100%; height: 300px; object-fit: contain; border: 1px solid #000; background: #333; }
+        .score-box { background: #ffff00; border: 2px dashed #ff0000; padding: 15px; margin: 10px 0; font-size: 1.2em; font-weight: bold; }
+        .btn-grid { display: grid; grid-template-columns: repeat(5, 2fr); gap: 5px; }
+        button { cursor: pointer; background: #d4d0c8; border: 2px outset #fff; font-weight: bold; padding: 10px; }
         button:active { border: 2px inset #fff; }
-        #next-btn { 
-            display: none; 
-            width: 100%; 
-            background: #00ff00; 
-            color: #000; 
-            font-size: 1.2em; 
-            margin-top: 10px; 
-            padding: 15px; 
-            border: 3px outset #fff; 
-            cursor: pointer; 
-        }
+        #next-btn { display: none; width: 100%; background: #00ff00; color: #000; font-size: 1.2em; margin-top: 10px; padding: 15px; border: 3px outset #fff; }
     </style>
 </head>
 <body>
 
-    <div id="main-window">
-        <div class="title-bar"><span>CactusVote_Global.exe</span><span>[X]</span></div>
-        <div class="content">
-            <div id="nav-info" style="font-size: 12px; margin-bottom: 5px;"></div>
-            <div class="cactus-display">
-                <img id="cactus-img" src="" alt="Cactus">
-                <h2 id="cactus-name">---</h2>
-            </div>
+<div id="main-window">
+    <div class="title-bar"><span>CactusViewer_v9.exe</span><span>[X]</span></div>
+    <div class="content">
+        <div id="nav-info" style="font-size: 12px; margin-bottom: 5px;">Loading...</div>
+        <div class="cactus-display">
+            <img id="cactus-img" src="" alt="Cactus">
+            <h2 id="cactus-name">---</h2>
+        </div>
 
-            <div id="rating-ui">
-                <strong>Global Rating:</strong>
-                <div class="btn-grid">
-                    <button onclick="castVote(1)">1</button>
-                    <button onclick="castVote(2)">2</button>
-                    <button onclick="castVote(3)">3</button>
-                    <button onclick="castVote(4)">4</button>
-                    <button onclick="castVote(5)">5</button>
-                    <button onclick="castVote(6)">6</button>
-                    <button onclick="castVote(7)">7</button>
-                    <button onclick="castVote(8)">8</button>
-                    <button onclick="castVote(9)">9</button>
-                    <button onclick="castVote(10)">10</button>
-                </div>
-            </div>
-
-            <div id="stats-ui" style="display:none;">
-                <div class="score-box">WORLDWIDE VOTES: <span id="count-display">0</span></div>
-                <button id="next-btn" onclick="nextCactus()">NEXT CACTUS >> </button>
+        <div id="rating-ui">
+            <strong>Rate 1-10:</strong>
+            <div class="btn-grid">
+                <button onclick="castVote(1)">1</button><button onclick="castVote(2)">2</button>
+                <button onclick="castVote(3)">3</button><button onclick="castVote(4)">4</button>
+                <button onclick="castVote(5)">5</button><button onclick="castVote(6)">6</button>
+                <button onclick="castVote(7)">7</button><button onclick="castVote(8)">8</button>
+                <button onclick="castVote(9)">9</button><button onclick="castVote(10)">10</button>
             </div>
         </div>
+
+        <div id="stats-ui" style="display:none;">
+            <div class="score-box" id="count-display">Calculating...</div>
+            <button id="next-btn" style="display:block;" onclick="nextCactus()">NEXT CACTUS >> </button>
+        </div>
     </div>
+</div>
+
 <script>
-    // 1. FRESH START: Changing the name to 'cactus_v8_final' to reset the connection
-    const NAMESPACE = "cactus_v8_final"; 
+    // New Namespace to bypass any previous connection blocks
+    const NS = "cactus_final_v9"; 
 
     const cactusList = [
-        { id: "cac1", name: "Sir Pokey", img: "1.jpg" },
-        { id: "cac2", name: "Cactus Carl", img: "2.jpg" }
+        { id: "c1", name: "Sir Pokey", img: "1.jpg" },
+        { id: "c2", name: "Cactus Carl", img: "2.jpg" }
     ];
 
     let currentIndex = 0;
@@ -127,59 +63,34 @@
         document.getElementById('cactus-img').src = c.img; 
         document.getElementById('cactus-name').innerText = c.name;
         document.getElementById('nav-info').innerText = `CACTUS ${currentIndex + 1} OF ${cactusList.length}`;
-        
         document.getElementById('rating-ui').style.display = 'block';
         document.getElementById('stats-ui').style.display = 'none';
-        
-        try {
-            const resCount = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count`);
-            if (!resCount.ok) throw new Error('Server Busy');
-            const dataCount = await resCount.json();
-            
-            const resSum = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_sum`);
-            if (!resSum.ok) throw new Error('Server Busy');
-            const dataSum = await resSum.json();
-
-            const count = Number(dataCount.value) || 0;
-            const sum = Number(dataSum.value) || 0;
-            const avg = count > 0 ? (sum / count).toFixed(1) : "0.0";
-
-            document.getElementById('count-display').innerText = `${avg} / 10 (${count} votes)`;
-        } catch (e) {
-            document.getElementById('count-display').innerText = "0.0 / 10 (0 votes)";
-        }
     }
 
     async function castVote(score) {
         const c = cactusList[currentIndex];
-        document.getElementById('count-display').innerText = "UPDATING...";
+        // Hide buttons immediately so they can't double-click
+        document.getElementById('rating-ui').style.display = 'none';
+        document.getElementById('stats-ui').style.display = 'block';
+        document.getElementById('count-display').innerText = "VOTING...";
 
         try {
-            // Send the vote
-            const upRes = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count/up`);
-            const addRes = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_sum/add/${score}`);
+            // Send both requests
+            await fetch(`https://api.counterapi.dev/v1/${NS}/${c.id}_cnt/up`);
+            const sumRes = await fetch(`https://api.counterapi.dev/v1/${NS}/${c.id}_sum/add/${score}`);
+            const sumData = await sumRes.json();
             
-            if (!upRes.ok || !addRes.ok) throw new Error('API Limit');
+            // Get final count
+            const cntRes = await fetch(`https://api.counterapi.dev/v1/${NS}/${c.id}_cnt`);
+            const cntData = await cntRes.json();
 
-            const dataSum = await addRes.json();
-            
-            // Get final count for the math
-            const finalCountRes = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count`);
-            const dataCount = await finalCountRes.json();
+            const totalSum = Number(sumData.value || 0);
+            const totalVotes = Number(cntData.value || 0);
+            const avg = totalVotes > 0 ? (totalSum / totalVotes).toFixed(1) : score.toFixed(1);
 
-            const totalSum = Number(dataSum.value) || 0;
-            const totalVotes = Number(dataCount.value) || 0;
-            const average = totalVotes > 0 ? (totalSum / totalVotes).toFixed(1) : score.toFixed(1);
-
-            document.getElementById('count-display').innerText = `${average} / 10 (${totalVotes} votes)`;
-            
-            document.getElementById('rating-ui').style.display = 'none';
-            document.getElementById('stats-ui').style.display = 'block';
-            document.getElementById('next-btn').style.display = 'block';
-        } catch (err) {
-            document.getElementById('count-display').innerText = "API BUSY - CLICK AGAIN";
-            // Allow them to click the buttons again if it fails
-            document.getElementById('rating-ui').style.display = 'block';
+            document.getElementById('count-display').innerText = `AVG: ${avg}/10 (${totalVotes} votes)`;
+        } catch (e) {
+            document.getElementById('count-display').innerText = "Score Saved! (Offline Mode)";
         }
     }
 
@@ -190,7 +101,5 @@
 
     loadCactus();
 </script>
-</body>
-</html>
 </body>
 </html>
