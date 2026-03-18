@@ -113,8 +113,8 @@
     </div>
 
 <script>
-    // 1. UNIQUE NAMESPACE - Every time you change this, the counts start over
-    const NAMESPACE = "texasron_cactus_global_v3"; 
+    // Using a new namespace to ensure we start with clean "Average" math
+    const NAMESPACE = "texasron_cactus_v5_average"; 
 
     const cactusList = [
         { id: "cac1", name: "Sir Pokey", img: "1.jpg" },
@@ -133,36 +133,49 @@
         document.getElementById('stats-ui').style.display = 'none';
         
         try {
-            const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}`);
-            const data = await res.json();
-            // We check both 'value' and 'count' just in case
-            const displayValue = data.value !== undefined ? data.value : (data.count !== undefined ? data.count : 0);
-            document.getElementById('count-display').innerText = displayValue;
+            // We fetch the COUNT (how many people) and the SUM (total points)
+            const resCount = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count`);
+            const dataCount = await resCount.json();
+            const resSum = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_sum`);
+            const dataSum = await resSum.json();
+
+            const count = dataCount.value || 0;
+            const sum = dataSum.value || 0;
+            
+            // MATH: Total Points divided by Number of People = Average
+            const avg = count > 0 ? (sum / count).toFixed(1) : "0.0";
+
+            document.getElementById('count-display').innerText = `${avg} / 10 (${count} votes)`;
         } catch (e) {
-            document.getElementById('count-display').innerText = "0";
+            document.getElementById('count-display').innerText = "0.0 / 10 (0 votes)";
         }
     }
 
     async function castVote(score) {
         const c = cactusList[currentIndex];
         try {
-            // THE 'UP' COMMAND INCREMENTS THE COUNT
-            const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}/up`);
-            const data = await res.json();
+            // 1. Add 1 to the "How many people voted" counter
+            await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count/up`);
             
-            // Extract the number from the API response
-            const newValue = data.value !== undefined ? data.value : (data.count !== undefined ? data.count : "1");
-            document.getElementById('count-display').innerText = newValue;
+            // 2. Add the ACTUAL BUTTON NUMBER (1-10) to the "Total Score" counter
+            const resSum = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_sum/add/${score}`);
+            const dataSum = await resSum.json();
+
+            // 3. Get the final count to show the new average immediately
+            const resCount = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count`);
+            const dataCount = await resCount.json();
+
+            const totalSum = dataSum.value;
+            const totalVotes = dataCount.value;
+            const average = (totalSum / totalVotes).toFixed(1);
+
+            document.getElementById('count-display').innerText = `${average} / 10 (${totalVotes} votes)`;
             
             document.getElementById('rating-ui').style.display = 'none';
             document.getElementById('stats-ui').style.display = 'block';
             document.getElementById('next-btn').style.display = 'block';
         } catch (e) {
-            console.error(e);
-            document.getElementById('count-display').innerText = "Voted!";
-            document.getElementById('rating-ui').style.display = 'none';
-            document.getElementById('stats-ui').style.display = 'block';
-            document.getElementById('next-btn').style.display = 'block';
+            alert("Connection error! Score not saved.");
         }
     }
 
@@ -171,8 +184,9 @@
         loadCactus();
     }
 
-    // INITIAL LOAD
     loadCactus();
 </script>
+</body>
+</html>
 </body>
 </html>
