@@ -113,11 +113,12 @@
     </div>
 
 <script>
-    const NAMESPACE = "texasron_global_cactus_v1";
+    // 1. UNIQUE NAMESPACE - Every time you change this, the counts start over
+    const NAMESPACE = "texasron_cactus_global_v3"; 
 
     const cactusList = [
-        { id: "cac1", name: "Cactus #1", img: "1.jpg" },
-        { id: "cac2", name: "Cactus #2", img: "2.jpg" }
+        { id: "cac1", name: "Sir Pokey", img: "1.jpg" },
+        { id: "cac2", name: "Cactus Carl", img: "2.jpg" }
     ];
 
     let currentIndex = 0;
@@ -134,7 +135,9 @@
         try {
             const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}`);
             const data = await res.json();
-            document.getElementById('count-display').innerText = data.value || 0;
+            // We check both 'value' and 'count' just in case
+            const displayValue = data.value !== undefined ? data.value : (data.count !== undefined ? data.count : 0);
+            document.getElementById('count-display').innerText = displayValue;
         } catch (e) {
             document.getElementById('count-display').innerText = "0";
         }
@@ -143,15 +146,23 @@
     async function castVote(score) {
         const c = cactusList[currentIndex];
         try {
+            // THE 'UP' COMMAND INCREMENTS THE COUNT
             const res = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}/up`);
             const data = await res.json();
-            document.getElementById('count-display').innerText = data.value;
+            
+            // Extract the number from the API response
+            const newValue = data.value !== undefined ? data.value : (data.count !== undefined ? data.count : "1");
+            document.getElementById('count-display').innerText = newValue;
             
             document.getElementById('rating-ui').style.display = 'none';
             document.getElementById('stats-ui').style.display = 'block';
             document.getElementById('next-btn').style.display = 'block';
         } catch (e) {
-            alert("Connection error!");
+            console.error(e);
+            document.getElementById('count-display').innerText = "Voted!";
+            document.getElementById('rating-ui').style.display = 'none';
+            document.getElementById('stats-ui').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
         }
     }
 
@@ -160,6 +171,7 @@
         loadCactus();
     }
 
+    // INITIAL LOAD
     loadCactus();
 </script>
 </body>
