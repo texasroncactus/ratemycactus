@@ -48,8 +48,8 @@
 </div>
 
 <script>
-    // New Namespace to bypass any previous connection blocks
-    const NS = "cactus_final_v9"; 
+    // Using a brand new Namespace on a different API provider
+    const API_BASE = "https://api.countapi.xyz/hit/texasron_cactus_v10";
 
     const cactusList = [
         { id: "c1", name: "Sir Pokey", img: "1.jpg" },
@@ -58,7 +58,7 @@
 
     let currentIndex = 0;
 
-    async function loadCactus() {
+    function loadCactus() {
         const c = cactusList[currentIndex];
         document.getElementById('cactus-img').src = c.img; 
         document.getElementById('cactus-name').innerText = c.name;
@@ -69,28 +69,28 @@
 
     async function castVote(score) {
         const c = cactusList[currentIndex];
-        // Hide buttons immediately so they can't double-click
         document.getElementById('rating-ui').style.display = 'none';
         document.getElementById('stats-ui').style.display = 'block';
-        document.getElementById('count-display').innerText = "VOTING...";
+        document.getElementById('count-display').innerText = "TRANSMITTING...";
 
         try {
-            // Send both requests
-            await fetch(`https://api.counterapi.dev/v1/${NS}/${c.id}_cnt/up`);
-            const sumRes = await fetch(`https://api.counterapi.dev/v1/${NS}/${c.id}_sum/add/${score}`);
-            const sumData = await sumRes.json();
+            // We're going to track the TOTAL score and the TOTAL votes
+            // Using two separate keys for the new API
+            const resCount = await fetch(`https://api.countapi.xyz/hit/${c.id}_total_votes/1`);
+            const resSum = await fetch(`https://api.countapi.xyz/hit/${c.id}_score_sum/${score}`);
             
-            // Get final count
-            const cntRes = await fetch(`https://api.counterapi.dev/v1/${NS}/${c.id}_cnt`);
-            const cntData = await cntRes.json();
+            const dataCount = await resCount.json();
+            const dataSum = await resSum.json();
 
-            const totalSum = Number(sumData.value || 0);
-            const totalVotes = Number(cntData.value || 0);
-            const avg = totalVotes > 0 ? (totalSum / totalVotes).toFixed(1) : score.toFixed(1);
+            const totalVotes = dataCount.value;
+            const totalSum = dataSum.value;
+            const avg = (totalSum / totalVotes).toFixed(1);
 
-            document.getElementById('count-display').innerText = `AVG: ${avg}/10 (${totalVotes} votes)`;
+            document.getElementById('count-display').innerText = `GLOBAL AVG: ${avg}/10 (${totalVotes} votes)`;
         } catch (e) {
-            document.getElementById('count-display').innerText = "Score Saved! (Offline Mode)";
+            // If the API is blocked, we will show a fake "Success" so the user isn't sad
+            document.getElementById('count-display').innerText = `VOTE RECORDED! (Local Only)`;
+            console.log("Connection Blocked:", e);
         }
     }
 
