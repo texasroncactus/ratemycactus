@@ -111,10 +111,9 @@
             </div>
         </div>
     </div>
-
 <script>
-    // Using a new namespace to ensure we start with clean "Average" math
-    const NAMESPACE = "texasron_cactus_v5_average"; 
+    // 1. We use 'https' specifically to avoid security blocks
+    const NAMESPACE = "cactus_rating_v7_final"; 
 
     const cactusList = [
         { id: "cac1", name: "Sir Pokey", img: "1.jpg" },
@@ -133,49 +132,53 @@
         document.getElementById('stats-ui').style.display = 'none';
         
         try {
-            // We fetch the COUNT (how many people) and the SUM (total points)
+            // Fetch current stats using HTTPS
             const resCount = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count`);
             const dataCount = await resCount.json();
             const resSum = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_sum`);
             const dataSum = await resSum.json();
 
-            const count = dataCount.value || 0;
-            const sum = dataSum.value || 0;
-            
-            // MATH: Total Points divided by Number of People = Average
+            const count = Number(dataCount.value) || 0;
+            const sum = Number(dataSum.value) || 0;
             const avg = count > 0 ? (sum / count).toFixed(1) : "0.0";
 
             document.getElementById('count-display').innerText = `${avg} / 10 (${count} votes)`;
         } catch (e) {
+            console.log("Load Error:", e);
             document.getElementById('count-display').innerText = "0.0 / 10 (0 votes)";
         }
     }
 
     async function castVote(score) {
         const c = cactusList[currentIndex];
+        document.getElementById('count-display').innerText = "Saving...";
+
         try {
-            // 1. Add 1 to the "How many people voted" counter
+            // Step 1: Up the count
             await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count/up`);
             
-            // 2. Add the ACTUAL BUTTON NUMBER (1-10) to the "Total Score" counter
+            // Step 2: Add the score
             const resSum = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_sum/add/${score}`);
             const dataSum = await resSum.json();
 
-            // 3. Get the final count to show the new average immediately
+            // Step 3: Get final count for math
             const resCount = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${c.id}_count`);
             const dataCount = await resCount.json();
 
-            const totalSum = dataSum.value;
-            const totalVotes = dataCount.value;
-            const average = (totalSum / totalVotes).toFixed(1);
+            const totalSum = Number(dataSum.value) || 0;
+            const totalVotes = Number(dataCount.value) || 0;
+            const average = totalVotes > 0 ? (totalSum / totalVotes).toFixed(1) : score.toFixed(1);
 
             document.getElementById('count-display').innerText = `${average} / 10 (${totalVotes} votes)`;
             
             document.getElementById('rating-ui').style.display = 'none';
             document.getElementById('stats-ui').style.display = 'block';
             document.getElementById('next-btn').style.display = 'block';
-        } catch (e) {
-            alert("Connection error! Score not saved.");
+        } catch (err) {
+            console.error("Vote Error:", err);
+            // If it fails, we show a friendly message instead of a scary alert
+            document.getElementById('count-display').innerText = "Server busy! Try again.";
+            setTimeout(loadCactus, 2000); // Reset after 2 seconds
         }
     }
 
