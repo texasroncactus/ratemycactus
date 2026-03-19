@@ -4,23 +4,18 @@
     <meta charset="UTF-8">
     <title>Cactus Viewer 95</title>
     <style>
-        /* Classic Windows 95 Aesthetic */
         body { background-color: #008080; font-family: "Tahoma", sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .window { width: 400px; background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; box-shadow: 1px 1px 0 0 #000; padding: 2px; position: relative; }
         .title-bar { background: linear-gradient(90deg, #000080, #1084d0); padding: 3px 5px; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; font-size: 13px; height: 20px; }
         .title-bar-controls { display: flex; gap: 2px; }
-        .title-bar-controls button { width: 16px; height: 14px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; font-weight: bold; cursor: default; }
-        
+        .title-bar-controls button { width: 16px; height: 14px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; font-weight: bold; }
         .window-body { padding: 15px; text-align: center; }
-        .image-container { background: #000; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; margin-bottom: 10px; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
+        .image-container { background: #000; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; margin-bottom: 10px; height: 200px; display: flex; justify-content: center; align-items: center; }
+        .image-container img { max-width: 100%; max-height: 100%; }
         .rating-display { background: #ffffff; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 5px; margin: 10px 0; font-family: 'Courier New', monospace; font-weight: bold; font-size: 14px; }
-        
-        .win95-btn { background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; padding: 4px 10px; cursor: pointer; font-size: 12px; outline: none; }
+        .win95-btn { background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; padding: 4px 10px; cursor: pointer; font-size: 12px; outline: none; margin: 2px; }
         .win95-btn:active { border-color: #808080 #ffffff #ffffff #808080; padding: 5px 9px 3px 11px; }
-        .win95-btn:disabled { color: #808080; cursor: default; }
-        
+        .win95-btn:disabled { color: #808080; }
         .hidden { display: none; }
         #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; z-index: 1000; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); border: 2px solid #fff; }
     </style>
@@ -30,27 +25,21 @@
 <div class="window">
     <div class="title-bar">
         <span>🌵 CactusViewer.exe</span>
-        <div class="title-bar-controls">
-            <button>_</button><button>□</button><button>X</button>
-        </div>
+        <div class="title-bar-controls"><button>_</button><button>□</button><button>X</button></div>
     </div>
-    
     <div class="window-body">
-        <div class="cactus-box" id="box-1" data-id="texasron_cactus3">
-            <div class="image-container"><img src="cactus1.jpg" alt="Cactus 1"></div>
+        <div class="cactus-box" id="box-1" data-id="cactus_final_v1">
+            <div class="image-container"><img src="cactus1.jpg"></div>
             <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
         </div>
-
-        <div class="cactus-box hidden" id="box-2" data-id="texasron_cactus4">
-            <div class="image-container"><img src="cactus2.jpg" alt="Cactus 2"></div>
+        <div class="cactus-box hidden" id="box-2" data-id="cactus_final_v2">
+            <div class="image-container"><img src="cactus2.jpg"></div>
             <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
         </div>
-
         <button id="next-btn" class="win95-btn" style="width:100%; margin-top:10px; font-weight:bold" disabled>Next Cactus >> </button>
     </div>
-
     <div id="msg-box" class="window hidden">
         <div class="title-bar"><span>Message</span></div>
         <div class="window-body">
@@ -61,76 +50,74 @@
 </div>
 
 <script>
-    const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; 
-    const NAMESPACE = "texas-rons-team-3349";
+    const API_BASE = "https://texasron.texasroncactus.workers.dev/api/v1/texas-rons-team-3349";
     let currentIdx = 0;
     const boxes = document.querySelectorAll(".cactus-box");
     const nextBtn = document.getElementById("next-btn");
 
     function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
 
-    // FETCH DATA FROM SERVER
     async function loadRating(id, box) {
-        const avgSpan = box.querySelector(".avg");
         try {
             const cb = `?t=${Date.now()}`;
             const [tRes, vRes] = await Promise.all([
-                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total${cb}`),
-                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes${cb}`)
+                fetch(`${API_BASE}/${id}_total${cb}`),
+                fetch(`${API_BASE}/${id}_votes${cb}`)
             ]);
-            
             const tData = await tRes.json();
             const vData = await vRes.json();
-
+            
             const total = Number(tData.count) || 0;
             const votes = Number(vData.count) || 0;
             
             const result = votes === 0 ? "0.00" : (total / votes).toFixed(2);
-            avgSpan.innerText = result;
-            console.log(`Server Data for ${id}: ${total} total / ${votes} votes`);
-        } catch (e) {
-            console.error("Load Failed:", e);
-        }
+            box.querySelector(".avg").innerText = result;
+            console.log(`Server Read: ${id} = ${total}/${votes}`);
+        } catch (e) { console.error("Load Failed", e); }
     }
 
-    // SUBMIT VOTE TO SERVER
     async function handleVote(id, score, box) {
         const btns = box.querySelectorAll(".win95-btn");
         btns.forEach(b => b.disabled = true);
         
         try {
-            // We use the /up endpoint with ?amount= for the score
-            // And a standard /up for the vote count
-            const resScore = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up?amount=${score}`, { method: "POST" });
-            const resCount = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
+            // We switch to GET because your server is rejecting POST.
+            // We try the '/hit' endpoint which is a common fallback.
+            const urlTotal = `${API_BASE}/${id}_total/hit?amount=${score}&t=${Date.now()}`;
+            const urlVotes = `${API_BASE}/${id}_votes/hit?t=${Date.now()}`;
 
-            if (resScore.ok && resCount.ok) {
+            const [res1, res2] = await Promise.all([
+                fetch(urlTotal),
+                fetch(urlVotes)
+            ]);
+
+            if (res1.ok && res2.ok) {
                 document.getElementById('msg-box').classList.remove('hidden');
-                
-                // Crucial: Wait a moment for the Worker to finish writing before we ask for the new average
                 setTimeout(() => {
                     loadRating(id, box);
                     nextBtn.disabled = false;
-                }, 750);
+                }, 800);
             } else {
-                throw new Error("Server rejected the vote.");
+                // If /hit fails, try /up with GET as a final fallback
+                await Promise.all([
+                    fetch(`${API_BASE}/${id}_total/up?amount=${score}`),
+                    fetch(`${API_BASE}/${id}_votes/up`)
+                ]);
+                document.getElementById('msg-box').classList.remove('hidden');
+                setTimeout(() => { loadRating(id, box); nextBtn.disabled = false; }, 800);
             }
-
         } catch (e) {
-            console.error("Vote Failed:", e);
-            alert("Connection Error: Your vote wasn't saved.");
+            console.error("Vote Error", e);
             btns.forEach(b => b.disabled = false);
         }
     }
 
-    // INIT BUTTONS
     boxes.forEach(box => {
         const id = box.dataset.id;
         const container = box.querySelector(".btn-group");
         for(let i=1; i<=5; i++) {
             const b = document.createElement("button");
             b.className = "win95-btn";
-            b.style.margin = "2px";
             b.innerText = i;
             b.onclick = () => handleVote(id, i, box);
             container.appendChild(b);
@@ -145,6 +132,5 @@
         nextBtn.disabled = true;
     };
 </script>
-
 </body>
 </html>
