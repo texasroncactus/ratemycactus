@@ -9,13 +9,19 @@
         .title-bar { background: linear-gradient(90deg, #000080, #1084d0); padding: 3px 5px; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; font-size: 13px; height: 20px; }
         .title-bar-controls { display: flex; gap: 2px; }
         .title-bar-controls button { width: 16px; height: 14px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; font-weight: bold; }
+        
         .window-body { padding: 15px; text-align: center; }
         .image-container { background: #000; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; margin-bottom: 10px; height: 200px; display: flex; justify-content: center; align-items: center; }
         .image-container img { max-width: 100%; max-height: 100%; }
+        
         .rating-display { background: #ffffff; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 5px; margin: 10px 0; font-family: 'Courier New', monospace; font-weight: bold; font-size: 14px; }
+        
+        .status-bar { border-top: 1px solid #808080; margin-top: 10px; padding-top: 5px; font-size: 11px; text-align: left; color: #444; }
+        
         .win95-btn { background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; padding: 4px 10px; cursor: pointer; font-size: 12px; outline: none; margin: 2px; }
         .win95-btn:active { border-color: #808080 #ffffff #ffffff #808080; padding: 5px 9px 3px 11px; }
-        .win95-btn:disabled { color: #808080; }
+        .win95-btn:disabled { color: #808080; cursor: default; text-shadow: 1px 1px #fff; }
+        
         .hidden { display: none; }
         #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; z-index: 1000; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); border: 2px solid #fff; }
     </style>
@@ -32,14 +38,19 @@
             <div class="image-container"><img src="cactus1.jpg"></div>
             <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
+            <div class="status-bar">Total Votes Cast: <span class="v-count">0</span></div>
         </div>
+        
         <div class="cactus-box hidden" id="box-2" data-id="cactus_master_4">
             <div class="image-container"><img src="cactus2.jpg"></div>
             <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
+            <div class="status-bar">Total Votes Cast: <span class="v-count">0</span></div>
         </div>
+        
         <button id="next-btn" class="win95-btn" style="width:100%; margin-top:10px; font-weight:bold" disabled>Next Cactus >> </button>
     </div>
+
     <div id="msg-box" class="window hidden">
         <div class="title-bar"><span>Message</span></div>
         <div class="window-body">
@@ -57,7 +68,6 @@
 
     function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
 
-    // Helper to get raw data from server
     async function getRawData(id) {
         const cb = `?t=${Date.now()}`;
         const [tRes, vRes] = await Promise.all([
@@ -76,7 +86,7 @@
         const stats = await getRawData(id);
         const result = stats.votes === 0 ? "0.00" : (stats.total / stats.votes).toFixed(2);
         box.querySelector(".avg").innerText = result;
-        console.log(`Current: ${stats.total} points / ${stats.votes} votes`);
+        box.querySelector(".v-count").innerText = stats.votes;
     }
 
     async function handleVote(id, score, box) {
@@ -84,17 +94,10 @@
         btns.forEach(b => b.disabled = true);
         
         try {
-            // 1. Get current numbers from server
             const current = await getRawData(id);
-            
-            // 2. Add your vote locally
             const nextTotal = current.total + Number(score);
             const nextVotes = current.votes + 1;
 
-            console.log(`Updating ${id}: New Total ${nextTotal}, New Votes ${nextVotes}`);
-
-            // 3. TELL the server exactly what the new numbers are
-            // We use /set?count=X because /up is ignoring our 'amount'
             await Promise.all([
                 fetch(`${API_BASE}/${id}_total/set?count=${nextTotal}`),
                 fetch(`${API_BASE}/${id}_votes/set?count=${nextVotes}`)
@@ -102,12 +105,12 @@
 
             document.getElementById('msg-box').classList.remove('hidden');
 
-            // 4. Update the UI
             box.querySelector(".avg").innerText = (nextTotal / nextVotes).toFixed(2);
+            box.querySelector(".v-count").innerText = nextVotes;
             nextBtn.disabled = false;
 
         } catch (e) {
-            console.error("Manual Math Failed", e);
+            console.error("Vote Error", e);
             btns.forEach(b => b.disabled = false);
         }
     }
