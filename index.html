@@ -49,14 +49,12 @@
 
 <h1>🌵 RATE MY CACTUS 🌵</h1>
 
-<!-- Cactus 1 -->
 <div class="cactus-box" data-id="texasron_cactus1">
   <img src="cactus1.jpg" alt="Cactus 1">
   <p>Average Rating: <span class="avg">Loading...</span></p>
   <div class="buttons"></div>
 </div>
 
-<!-- Cactus 2 -->
 <div class="cactus-box" data-id="texasron_cactus2">
   <img src="cactus2.jpg" alt="Cactus 2">
   <p>Average Rating: <span class="avg">Loading...</span></p>
@@ -64,16 +62,13 @@
 </div>
 
 <script>
-// ===== CONFIG =====
-const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; // <-- your deployed worker
+const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; // <-- your Worker URL
 const NAMESPACE = "texas-rons-team-3349";
 
-// ===== SETUP CACTUS BOXES =====
 document.querySelectorAll(".cactus-box").forEach(box => {
   const id = box.dataset.id;
   const btnContainer = box.querySelector(".buttons");
 
-  // Create buttons 1–10
   for (let i = 1; i <= 10; i++) {
     const btn = document.createElement("button");
     btn.innerText = i;
@@ -84,24 +79,25 @@ document.querySelectorAll(".cactus-box").forEach(box => {
   loadRating(id, box);
 });
 
-// ===== VOTE FUNCTION =====
 async function vote(id, score, box) {
   try {
-    // Update total score
-    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up?amount=${score}`);
-    // Increment vote count
-    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`);
+    // Use POST to correctly send the score
+    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: score })
+    });
+
+    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
 
     alert("Thanks for rating! 🌵");
 
-    // Refresh average
     loadRating(id, box);
   } catch (err) {
     console.error("Vote failed", err);
   }
 }
 
-// ===== LOAD AVERAGE =====
 async function loadRating(id, box) {
   try {
     const totalRes = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total`);
