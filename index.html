@@ -24,6 +24,27 @@
         
         .hidden { display: none; }
         #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; z-index: 1000; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); border: 2px solid #fff; }
+
+.footer-links {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.gif-link img {
+    /* Old school look: no smooth scaling, keep it crisp */
+    image-rendering: pixelated; 
+    /* Classic 1px border or none depending on your taste */
+    border: 1px solid #808080; 
+}
+
+.gif-link:hover img {
+    border-color: #ffffff;
+}
+        
     </style>
 </head>
 <body>
@@ -135,5 +156,11 @@
         nextBtn.disabled = true;
     };
 </script>
+
+    <div class="footer-links">
+    <a href="https://your-link-here.com" target="_blank" class="gif-link">
+        <img src="your-animation.gif" alt="Cool Site" border="0">
+    </a>
+</div>
 </body>
 </html>
