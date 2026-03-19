@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <title>Cactus Viewer 95</title>
     <style>
-        body { background-color: #008080; font-family: "Tahoma", sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { background-color: #008080; font-family: "Tahoma", "Segoe UI", sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .window { width: 400px; background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; box-shadow: 1px 1px 0 0 #000; padding: 2px; position: relative; }
         .title-bar { background: linear-gradient(90deg, #000080, #1084d0); padding: 3px 5px; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; font-size: 13px; height: 18px; }
         .title-bar-controls { display: flex; gap: 2px; }
-        .title-bar-controls button { width: 16px; height: 14px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; }
+        .title-bar-controls button { width: 16px; height: 14px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; cursor: default; }
         .window-body { padding: 15px; text-align: center; }
-        .image-container { background: #000; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; margin-bottom: 10px; height: 200px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 10px; }
-        .image-container img { max-width: 100%; max-height: 100%; }
-        .rating-display { background: #ffffff; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 5px; margin: 10px 0; font-family: 'Courier New', monospace; font-weight: bold; }
-        .win95-btn { background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; padding: 4px 10px; cursor: pointer; font-size: 12px; }
+        .image-container { background: #000; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; margin-bottom: 10px; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .rating-display { background: #ffffff; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 5px; margin: 10px 0; font-family: 'Courier New', monospace; font-weight: bold; font-size: 14px; }
+        .win95-btn { background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; padding: 4px 10px; cursor: pointer; font-family: "Tahoma"; font-size: 12px; outline: none; }
         .win95-btn:active { border-color: #808080 #ffffff #ffffff #808080; padding: 5px 9px 3px 11px; }
-        .win95-btn:disabled { color: #808080; }
+        .win95-btn:disabled { color: #808080; cursor: default; }
         .hidden { display: none; }
-        #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 220px; z-index: 1000; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); border: 2px solid #fff; }
+        #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; z-index: 1000; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); border: 2px solid #fff; }
     </style>
 </head>
 <body>
@@ -25,21 +25,21 @@
 <div class="window">
     <div class="title-bar">
         <span>🌵 CactusViewer.exe</span>
-        <div class="title-bar-controls"><button>_</button><button>□</button><button>X</button></div>
+        <div class="title-bar-controls">
+            <button>_</button><button>□</button><button>X</button>
+        </div>
     </div>
 
     <div class="window-body">
         <div class="cactus-box" id="box-1" data-id="texasron_cactus1">
-            <div class="image-container">
-                <img src="cactus1.jpg" alt="[Image Not Found]">
-            </div>
-            <div class="rating-display">Avg: <span class="avg">0.00</span></div>
+            <div class="image-container"><img src="cactus1.jpg" alt="Cactus 1"></div>
+            <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
         </div>
 
         <div class="cactus-box hidden" id="box-2" data-id="texasron_cactus2">
-            <div class="image-container"><img src="cactus2.jpg" alt="[Image Not Found]"></div>
-            <div class="rating-display">Avg: <span class="avg">0.00</span></div>
+            <div class="image-container"><img src="cactus2.jpg" alt="Cactus 2"></div>
+            <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
         </div>
 
@@ -47,51 +47,46 @@
     </div>
 
     <div id="msg-box" class="window hidden">
-        <div class="title-bar"><span id="msg-title">Message</span></div>
+        <div class="title-bar"><span>Message</span></div>
         <div class="window-body">
-            <p id="msg-text" style="margin: 0 0 10px 0; font-size: 12px;">Vote Received!</p>
+            <p style="margin: 0 0 10px 0; font-size: 12px;">Vote Recorded!</p>
             <button class="win95-btn" onclick="closeAlert()">OK</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Verify this URL - your 404s suggest the endpoint might be /api/v1/ or /v1/
+    // Adjusted BASE: If your 404s continue, try removing/adding "/api" here.
     const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; 
     const NAMESPACE = "texas-rons-team-3349";
     let currentIdx = 0;
     const boxes = document.querySelectorAll(".cactus-box");
     const nextBtn = document.getElementById("next-btn");
 
-    function showAlert(text, title = "Message") {
-        document.getElementById('msg-text').innerText = text;
-        document.getElementById('msg-title').innerText = title;
-        document.getElementById('msg-box').classList.remove('hidden');
-    }
-
-    function closeAlert() { 
-        document.getElementById('msg-box').classList.add('hidden'); 
-    }
+    function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
 
     async function loadRating(id, box) {
         const avgSpan = box.querySelector(".avg");
         try {
-            const cacheBuster = `?t=${Date.now()}`;
-            // Fetching the counts
-            const tRes = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total${cacheBuster}`);
-            const vRes = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes${cacheBuster}`);
+            const cb = `?t=${Date.now()}`;
+            const [tRes, vRes] = await Promise.all([
+                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total${cb}`),
+                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes${cb}`)
+            ]);
             
             const tData = await tRes.json();
             const vData = await vRes.json();
 
-            const total = Number(tData.count) || 0;
-            const votes = Number(vData.count) || 0;
+            // Convert strings to Numbers to ensure the math works
+            const totalScore = Number(tData.count) || 0;
+            const voteCount = Number(vData.count) || 0;
             
-            const result = votes === 0 ? "0.00" : (total / votes).toFixed(2);
+            const result = voteCount === 0 ? "0.00" : (totalScore / voteCount).toFixed(2);
             avgSpan.innerText = result;
-            console.log(`ID: ${id} | Total: ${total} | Votes: ${votes} | Avg: ${result}`);
+
+            console.log(`Math for ${id}: ${totalScore} / ${voteCount} = ${result}`);
         } catch (e) {
-            console.error("Load Error:", e);
+            console.error("Math Load Error:", e);
         }
     }
 
@@ -100,30 +95,26 @@
         btns.forEach(b => b.disabled = true);
         
         try {
-            // Attempt to POST
-            const r1 = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ amount: score })
-            });
-            const r2 = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
+            // FIX: Passing 'amount' as a query parameter is more reliable for CounterAPI
+            // This ensures the 'total' counter actually records the 1-5 value
+            const updateScore = fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up?amount=${score}`, { method: "POST" });
+            const updateCount = fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
 
-            if (r1.status === 404 || r2.status === 404) {
-                showAlert("Error 404: API endpoint not found. Vote not saved.", "System Error");
-                btns.forEach(b => b.disabled = false);
-                return;
-            }
+            const [res1, res2] = await Promise.all([updateScore, updateCount]);
 
-            showAlert("Vote Recorded! Calculating average...");
+            if (!res1.ok || !res2.ok) throw new Error("Server rejected vote");
 
-            // Wait 500ms for Worker consistency before refreshing math
-            setTimeout(async () => {
-                await loadRating(id, box);
+            document.getElementById('msg-box').classList.remove('hidden');
+
+            // Wait 600ms for Worker to update before refreshing the display
+            setTimeout(() => {
+                loadRating(id, box);
                 nextBtn.disabled = false;
-            }, 500);
+            }, 600);
 
         } catch (e) {
-            showAlert("Connection Failed.", "Error");
+            console.error("Vote Error:", e);
+            alert("System Error: Vote not saved.");
             btns.forEach(b => b.disabled = false);
         }
     }
@@ -149,6 +140,5 @@
         nextBtn.disabled = true;
     };
 </script>
-
 </body>
 </html>
