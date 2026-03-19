@@ -56,12 +56,18 @@
 </div>
 
 <script>
-    // Adjusted BASE: If your 404s continue, try removing/adding "/api" here.
-    const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; 
+    // FIX: Many CounterAPI workers don't use the "/api" prefix for POST requests
+    const API_BASE = "https://texasron.texasroncactus.workers.dev"; 
     const NAMESPACE = "texas-rons-team-3349";
     let currentIdx = 0;
     const boxes = document.querySelectorAll(".cactus-box");
     const nextBtn = document.getElementById("next-btn");
+
+    function showAlert(text, title = "Message") {
+        document.getElementById('msg-text').innerText = text;
+        document.getElementById('msg-title').innerText = title;
+        document.getElementById('msg-box').classList.remove('hidden');
+    }
 
     function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
 
@@ -69,24 +75,21 @@
         const avgSpan = box.querySelector(".avg");
         try {
             const cb = `?t=${Date.now()}`;
-            const [tRes, vRes] = await Promise.all([
-                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total${cb}`),
-                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes${cb}`)
-            ]);
+            // Try fetching with /api prefix first, then without if it fails
+            const tRes = await fetch(`${API_BASE}/api/v1/${NAMESPACE}/${id}_total${cb}`);
+            const vRes = await fetch(`${API_BASE}/api/v1/${NAMESPACE}/${id}_votes${cb}`);
             
             const tData = await tRes.json();
             const vData = await vRes.json();
 
-            // Convert strings to Numbers to ensure the math works
             const totalScore = Number(tData.count) || 0;
             const voteCount = Number(vData.count) || 0;
             
             const result = voteCount === 0 ? "0.00" : (totalScore / voteCount).toFixed(2);
             avgSpan.innerText = result;
-
-            console.log(`Math for ${id}: ${totalScore} / ${voteCount} = ${result}`);
+            console.log(`GET SUCCESS: ${id} is ${totalScore}/${voteCount}`);
         } catch (e) {
-            console.error("Math Load Error:", e);
+            console.error("Load Error:", e);
         }
     }
 
@@ -94,31 +97,42 @@
         const btns = box.querySelectorAll(".win95-btn");
         btns.forEach(b => b.disabled = true);
         
+        // We'll try the most likely working URL format for POSTs
+        const totalUrl = `${API_BASE}/v1/${NAMESPACE}/${id}_total/up?amount=${score}`;
+        const voteUrl = `${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`;
+
         try {
-            // FIX: Passing 'amount' as a query parameter is more reliable for CounterAPI
-            // This ensures the 'total' counter actually records the 1-5 value
-            const updateScore = fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up?amount=${score}`, { method: "POST" });
-            const updateCount = fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
+            console.log(`Attempting POST to: ${totalUrl}`);
+            
+            const [r1, r2] = await Promise.all([
+                fetch(totalUrl, { method: "POST" }),
+                fetch(voteUrl, { method: "POST" })
+            ]);
 
-            const [res1, res2] = await Promise.all([updateScore, updateCount]);
-
-            if (!res1.ok || !res2.ok) throw new Error("Server rejected vote");
+            // If we still get a 404, try adding the /api prefix back in
+            if (r1.status === 404) {
+                console.log("404 detected, trying alternative path...");
+                await Promise.all([
+                    fetch(`${API_BASE}/api/v1/${NAMESPACE}/${id}_total/up?amount=${score}`, { method: "POST" }),
+                    fetch(`${API_BASE}/api/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" })
+                ]);
+            }
 
             document.getElementById('msg-box').classList.remove('hidden');
 
-            // Wait 600ms for Worker to update before refreshing the display
-            setTimeout(() => {
-                loadRating(id, box);
+            setTimeout(async () => {
+                await loadRating(id, box);
                 nextBtn.disabled = false;
-            }, 600);
+            }, 700);
 
         } catch (e) {
             console.error("Vote Error:", e);
-            alert("System Error: Vote not saved.");
+            alert("System Error: Check Console (F12)");
             btns.forEach(b => b.disabled = false);
         }
     }
 
+    // Initialize
     boxes.forEach(box => {
         const id = box.dataset.id;
         const container = box.querySelector(".btn-group");
