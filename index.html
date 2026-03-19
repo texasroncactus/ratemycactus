@@ -28,12 +28,12 @@
         <div class="title-bar-controls"><button>_</button><button>□</button><button>X</button></div>
     </div>
     <div class="window-body">
-        <div class="cactus-box" id="box-1" data-id="cactus_final_v1">
+        <div class="cactus-box" id="box-1" data-id="cactus_master_3">
             <div class="image-container"><img src="cactus1.jpg"></div>
             <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
         </div>
-        <div class="cactus-box hidden" id="box-2" data-id="cactus_final_v2">
+        <div class="cactus-box hidden" id="box-2" data-id="cactus_master_4">
             <div class="image-container"><img src="cactus2.jpg"></div>
             <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
             <div class="btn-group"></div>
@@ -57,23 +57,26 @@
 
     function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
 
+    // Helper to get raw data from server
+    async function getRawData(id) {
+        const cb = `?t=${Date.now()}`;
+        const [tRes, vRes] = await Promise.all([
+            fetch(`${API_BASE}/${id}_total${cb}`),
+            fetch(`${API_BASE}/${id}_votes${cb}`)
+        ]);
+        const tData = await tRes.json();
+        const vData = await vRes.json();
+        return {
+            total: Number(tData.count) || 0,
+            votes: Number(vData.count) || 0
+        };
+    }
+
     async function loadRating(id, box) {
-        try {
-            const cb = `?t=${Date.now()}`;
-            const [tRes, vRes] = await Promise.all([
-                fetch(`${API_BASE}/${id}_total${cb}`),
-                fetch(`${API_BASE}/${id}_votes${cb}`)
-            ]);
-            const tData = await tRes.json();
-            const vData = await vRes.json();
-            
-            const total = Number(tData.count) || 0;
-            const votes = Number(vData.count) || 0;
-            
-            const result = votes === 0 ? "0.00" : (total / votes).toFixed(2);
-            box.querySelector(".avg").innerText = result;
-            console.log(`Server Read: ${id} = ${total}/${votes}`);
-        } catch (e) { console.error("Load Failed", e); }
+        const stats = await getRawData(id);
+        const result = stats.votes === 0 ? "0.00" : (stats.total / stats.votes).toFixed(2);
+        box.querySelector(".avg").innerText = result;
+        console.log(`Current: ${stats.total} points / ${stats.votes} votes`);
     }
 
     async function handleVote(id, score, box) {
@@ -81,33 +84,30 @@
         btns.forEach(b => b.disabled = true);
         
         try {
-            // We switch to GET because your server is rejecting POST.
-            // We try the '/hit' endpoint which is a common fallback.
-            const urlTotal = `${API_BASE}/${id}_total/hit?amount=${score}&t=${Date.now()}`;
-            const urlVotes = `${API_BASE}/${id}_votes/hit?t=${Date.now()}`;
+            // 1. Get current numbers from server
+            const current = await getRawData(id);
+            
+            // 2. Add your vote locally
+            const nextTotal = current.total + Number(score);
+            const nextVotes = current.votes + 1;
 
-            const [res1, res2] = await Promise.all([
-                fetch(urlTotal),
-                fetch(urlVotes)
+            console.log(`Updating ${id}: New Total ${nextTotal}, New Votes ${nextVotes}`);
+
+            // 3. TELL the server exactly what the new numbers are
+            // We use /set?count=X because /up is ignoring our 'amount'
+            await Promise.all([
+                fetch(`${API_BASE}/${id}_total/set?count=${nextTotal}`),
+                fetch(`${API_BASE}/${id}_votes/set?count=${nextVotes}`)
             ]);
 
-            if (res1.ok && res2.ok) {
-                document.getElementById('msg-box').classList.remove('hidden');
-                setTimeout(() => {
-                    loadRating(id, box);
-                    nextBtn.disabled = false;
-                }, 800);
-            } else {
-                // If /hit fails, try /up with GET as a final fallback
-                await Promise.all([
-                    fetch(`${API_BASE}/${id}_total/up?amount=${score}`),
-                    fetch(`${API_BASE}/${id}_votes/up`)
-                ]);
-                document.getElementById('msg-box').classList.remove('hidden');
-                setTimeout(() => { loadRating(id, box); nextBtn.disabled = false; }, 800);
-            }
+            document.getElementById('msg-box').classList.remove('hidden');
+
+            // 4. Update the UI
+            box.querySelector(".avg").innerText = (nextTotal / nextVotes).toFixed(2);
+            nextBtn.disabled = false;
+
         } catch (e) {
-            console.error("Vote Error", e);
+            console.error("Manual Math Failed", e);
             btns.forEach(b => b.disabled = false);
         }
     }
