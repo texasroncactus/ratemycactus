@@ -13,6 +13,7 @@
     align-items: center;
     height: 100vh;
     margin: 0;
+    -webkit-font-smoothing: none; /* Helps with that crisp aliased look */
   }
 
   /* The Main Window Container */
@@ -25,27 +26,48 @@
     padding: 2px;
   }
 
-  /* Title Bar */
+  /* Title Bar Fixes */
   .title-bar {
     background: linear-gradient(90deg, #000080, #1084d0);
-    padding: 3px 5px 3px 3px;
+    padding: 3px 2px 3px 3px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: white;
     font-weight: bold;
     font-size: 13px;
+    height: 18px;
+  }
+
+  .title-bar-text {
+    padding-left: 2px;
+  }
+
+  .title-bar-controls {
+    display: flex;
+    gap: 2px;
   }
 
   .title-bar-controls button {
     width: 16px;
     height: 14px;
-    font-size: 9px;
+    font-size: 11px;
+    font-family: "Tahoma", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 0;
     background: #c0c0c0;
     border: 1px solid;
     border-color: #ffffff #808080 #808080 #ffffff;
-    cursor: pointer;
+    cursor: default;
+    color: #000;
+    font-weight: bold;
+    line-height: 0;
+  }
+
+  .title-bar-controls button:active {
+    border-color: #808080 #ffffff #ffffff #808080;
   }
 
   /* Content Area */
@@ -61,28 +83,43 @@
     margin-bottom: 10px;
     padding: 2px;
     min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .image-container img {
     max-width: 100%;
+    max-height: 300px;
     display: block;
   }
 
   /* Retro Buttons */
+  .buttons {
+    margin-top: 10px;
+  }
+
   button.win95-btn {
     background: #c0c0c0;
     border: 2px solid;
     border-color: #ffffff #808080 #808080 #ffffff;
-    padding: 4px 10px;
+    padding: 4px 12px;
     font-size: 12px;
+    font-family: "Tahoma", sans-serif;
     cursor: pointer;
     outline: none;
     margin: 2px;
+    min-width: 35px;
   }
 
   button.win95-btn:active {
     border-color: #808080 #ffffff #ffffff #808080;
-    padding: 5px 9px 3px 11px;
+    padding: 5px 11px 3px 13px;
+  }
+
+  button.win95-btn:disabled {
+    color: #808080;
+    cursor: default;
   }
 
   .rating-display {
@@ -93,11 +130,11 @@
     margin: 10px 0;
     font-family: 'Courier New', monospace;
     font-weight: bold;
+    font-size: 14px;
   }
 
   .hidden { display: none; }
-
-  h2 { font-size: 16px; margin-top: 0; }
+  h2 { font-size: 16px; margin-top: 0; font-weight: normal; }
 </style>
 </head>
 <body>
@@ -107,7 +144,7 @@
     <div class="title-bar-text">🌵 CactusViewer.exe</div>
     <div class="title-bar-controls">
       <button>_</button>
-      <button>□</button>
+      <button style="font-size: 9px;">□</button>
       <button>X</button>
     </div>
   </div>
@@ -119,7 +156,7 @@
       <div class="image-container">
         <img src="cactus1.jpg" alt="Cactus 1">
       </div>
-      <div class="rating-display">Score: <span class="avg">0.00</span></div>
+      <div class="rating-display">Avg Score: <span class="avg">Loading...</span></div>
       <div class="buttons"></div>
     </div>
 
@@ -127,11 +164,11 @@
       <div class="image-container">
         <img src="cactus2.jpg" alt="Cactus 2">
       </div>
-      <div class="rating-display">Score: <span class="avg">0.00</span></div>
+      <div class="rating-display">Avg Score: <span class="avg">Loading...</span></div>
       <div class="buttons"></div>
     </div>
 
-    <hr style="border: 1px inset #fff; margin: 15px 0;">
+    <hr style="border: 0; border-top: 1px solid #808080; border-bottom: 1px solid #fff; margin: 15px 0;">
     
     <button id="next-btn" class="win95-btn" style="width: 100%; font-weight: bold;" disabled>Next Cactus >> </button>
   </div>
@@ -145,58 +182,82 @@ let currentCactusIndex = 0;
 const boxes = document.querySelectorAll(".cactus-box");
 const nextBtn = document.getElementById("next-btn");
 
-// Initialize Buttons and Load Initial Ratings
-boxes.forEach((box, index) => {
+// Initialize UI
+boxes.forEach((box) => {
   const id = box.dataset.id;
   const btnContainer = box.querySelector(".buttons");
 
-  for (let i = 1; i <= 5; i++) { // Shorter range for UI fit
+  // Create rating buttons 1-5
+  for (let i = 1; i <= 5; i++) {
     const btn = document.createElement("button");
     btn.innerText = i;
     btn.className = "win95-btn";
-    btn.onclick = () => vote(id, i, box);
+    btn.onclick = () => handleVote(id, i, box);
     btnContainer.appendChild(btn);
   }
 
   loadRating(id, box);
 });
 
-async function vote(id, score, box) {
+async function handleVote(id, score, box) {
+  // Disable all buttons in this box while voting to prevent double-clicks
+  const btns = box.querySelectorAll(".win95-btn");
+  btns.forEach(b => b.disabled = true);
+  
   try {
-    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up`, {
+    // 1. Send both score and vote count updates
+    const scoreReq = fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount: score })
     });
-    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
     
-    // Refresh rating and enable the "Next" button
+    const countReq = fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
+
+    // Wait for both to finish
+    await Promise.all([scoreReq, countReq]);
+
+    // 2. Short delay for worker consistency
+    await new Promise(r => setTimeout(r, 150));
+
+    // 3. Update the UI
     await loadRating(id, box);
     nextBtn.disabled = false;
   } catch (err) {
     console.error("Vote failed", err);
+    btns.forEach(b => b.disabled = false);
   }
 }
 
 async function loadRating(id, box) {
+  const avgSpan = box.querySelector(".avg");
   try {
-    const totalRes = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total`);
-    const votesRes = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes`);
-    const total = (await totalRes.json()).count || 0;
-    const votes = (await votesRes.json()).count || 0;
+    // Cache busting prevents the browser from showing old data
+    const cacheBuster = `?t=${Date.now()}`;
+    const [totalRes, votesRes] = await Promise.all([
+      fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total${cacheBuster}`),
+      fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes${cacheBuster}`)
+    ]);
+
+    const totalData = await totalRes.json();
+    const votesData = await votesRes.json();
+
+    const total = totalData.count || 0;
+    const votes = votesData.count || 0;
+    
     const avg = votes === 0 ? "0.00" : (total / votes).toFixed(2);
-    box.querySelector(".avg").innerText = avg;
+    avgSpan.innerText = avg;
   } catch (err) {
+    avgSpan.innerText = "Error";
     console.error("Load failed", err);
   }
 }
 
-// Next Button Logic
 nextBtn.addEventListener("click", () => {
   boxes[currentCactusIndex].classList.add("hidden");
   currentCactusIndex = (currentCactusIndex + 1) % boxes.length;
   boxes[currentCactusIndex].classList.remove("hidden");
-  nextBtn.disabled = true; // Lock until they vote on the new one
+  nextBtn.disabled = true;
 });
 </script>
 
