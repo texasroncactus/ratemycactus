@@ -2,104 +2,109 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌵 RateMyCactus.com 🌵</title>
+    <title>Rate My Cactus 🌵</title>
+
     <style>
-        body { background-color: #008080; background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); font-family: "Comic Sans MS", sans-serif; color: #fff; text-align: center; padding: 20px; margin: 0; }
-        #main-window { background-color: #c0c0c0; color: #000; width: 95%; max-width: 500px; margin: 20px auto; border: 3px ridge #fff; box-shadow: 10px 10px 0px rgba(0,0,0,0.5); }
-        .title-bar { background: linear-gradient(90deg, #000080, #1084d0); color: white; padding: 5px 10px; display: flex; justify-content: space-between; font-weight: bold; }
-        .content { padding: 20px; }
-        .cactus-display { background: #fff; border: 2px inset #eee; padding: 10px; margin-bottom: 15px; }
-        #cactus-img { width: 100%; height: 300px; object-fit: contain; border: 1px solid #000; background: #333; }
-        .score-box { background: #ffff00; border: 2px dashed #ff0000; padding: 15px; margin: 10px 0; font-size: 1.2em; font-weight: bold; }
-        .btn-grid { display: grid; grid-template-columns: repeat(5, 2fr); gap: 5px; }
-        button { cursor: pointer; background: #d4d0c8; border: 2px outset #fff; font-weight: bold; padding: 10px; }
-        button:active { border: 2px inset #fff; }
-        #next-btn { display: none; width: 100%; background: #00ff00; color: #000; font-size: 1.2em; margin-top: 10px; padding: 15px; border: 3px outset #fff; }
+        body {
+            background: black;
+            color: #00FF00;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .cactus-box {
+            border: 2px dashed #FF00FF;
+            padding: 20px;
+            margin: 20px;
+            display: inline-block;
+        }
+
+        button {
+            background: black;
+            color: #00FFFF;
+            border: 1px solid #00FFFF;
+            cursor: pointer;
+        }
+
+        button:hover {
+            color: #FF00FF;
+            border-color: #FF00FF;
+        }
     </style>
 </head>
+
 <body>
 
-<div id="main-window">
-    <div class="title-bar"><span>CactusViewer_v9.exe</span><span>[X]</span></div>
-    <div class="content">
-        <div id="nav-info" style="font-size: 12px; margin-bottom: 5px;">Loading...</div>
-        <div class="cactus-display">
-            <img id="cactus-img" src="" alt="Cactus">
-            <h2 id="cactus-name">---</h2>
-        </div>
+<h1>🌵 RATE MY CACTUS 🌵</h1>
 
-        <div id="rating-ui">
-            <strong>Rate 1-10:</strong>
-            <div class="btn-grid">
-                <button onclick="castVote(1)">1</button><button onclick="castVote(2)">2</button>
-                <button onclick="castVote(3)">3</button><button onclick="castVote(4)">4</button>
-                <button onclick="castVote(5)">5</button><button onclick="castVote(6)">6</button>
-                <button onclick="castVote(7)">7</button><button onclick="castVote(8)">8</button>
-                <button onclick="castVote(9)">9</button><button onclick="castVote(10)">10</button>
-            </div>
-        </div>
+<div class="cactus-box" data-id="texasron_cactus1">
+    <img src="cactus1.jpg" style="width:250px; border:4px solid #00FF00;">
+    <p>Average Rating: <span class="avg">Loading...</span></p>
+    <div class="buttons"></div>
+</div>
 
-        <div id="stats-ui" style="display:none;">
-            <div class="score-box" id="count-display">Calculating...</div>
-            <button id="next-btn" style="display:block;" onclick="nextCactus()">NEXT CACTUS >> </button>
-        </div>
-    </div>
+<div class="cactus-box" data-id="texasron_cactus2">
+    <img src="cactus2.jpg" style="width:250px; border:4px solid #FF00FF;">
+    <p>Average Rating: <span class="avg">Loading...</span></p>
+    <div class="buttons"></div>
 </div>
 
 <script>
-    // Using a brand new Namespace on a different API provider
-    const API_BASE = "https://api.countapi.xyz/hit/texasron_cactus_v10";
+// ========================
+// Replace this with your deployed Worker URL
+const API_BASE = "https://texasron.texasroncactus.workers.dev/api";
+const namespace = "texas-rons-team-3349";
 
-    const cactusList = [
-        { id: "c1", name: "Sir Pokey", img: "1.jpg" },
-        { id: "c2", name: "Cactus Carl", img: "2.jpg" }
-    ];
+document.querySelectorAll(".cactus-box").forEach(box => {
+    const id = box.dataset.id;
+    const btnContainer = box.querySelector(".buttons");
 
-    let currentIndex = 0;
+    // Create buttons 1–10
+    for (let i = 1; i <= 10; i++) {
+        let btn = document.createElement("button");
+        btn.innerText = i;
+        btn.style.margin = "3px";
 
-    function loadCactus() {
-        const c = cactusList[currentIndex];
-        document.getElementById('cactus-img').src = c.img; 
-        document.getElementById('cactus-name').innerText = c.name;
-        document.getElementById('nav-info').innerText = `CACTUS ${currentIndex + 1} OF ${cactusList.length}`;
-        document.getElementById('rating-ui').style.display = 'block';
-        document.getElementById('stats-ui').style.display = 'none';
+        btn.onclick = () => vote(id, i, box);
+        btnContainer.appendChild(btn);
     }
 
-    async function castVote(score) {
-        const c = cactusList[currentIndex];
-        document.getElementById('rating-ui').style.display = 'none';
-        document.getElementById('stats-ui').style.display = 'block';
-        document.getElementById('count-display').innerText = "TRANSMITTING...";
+    loadRating(id, box);
+});
 
-        try {
-            // We're going to track the TOTAL score and the TOTAL votes
-            // Using two separate keys for the new API
-            const resCount = await fetch(`https://api.countapi.xyz/hit/${c.id}_total_votes/1`);
-            const resSum = await fetch(`https://api.countapi.xyz/hit/${c.id}_score_sum/${score}`);
-            
-            const dataCount = await resCount.json();
-            const dataSum = await resSum.json();
+// Vote function
+async function vote(id, score, box) {
+    try {
+        console.log("Voting:", id, score);
 
-            const totalVotes = dataCount.value;
-            const totalSum = dataSum.value;
-            const avg = (totalSum / totalVotes).toFixed(1);
+        await fetch(`${API_BASE}/v1/${namespace}/${id}_total/up?amount=${score}`);
+        await fetch(`${API_BASE}/v1/${namespace}/${id}_votes/up`);
 
-            document.getElementById('count-display').innerText = `GLOBAL AVG: ${avg}/10 (${totalVotes} votes)`;
-        } catch (e) {
-            // If the API is blocked, we will show a fake "Success" so the user isn't sad
-            document.getElementById('count-display').innerText = `VOTE RECORDED! (Local Only)`;
-            console.log("Connection Blocked:", e);
-        }
+        alert("THANKS FOR RATING!!! 🌵");
+
+        loadRating(id, box);
+    } catch (err) {
+        console.error("Vote failed", err);
     }
+}
 
-    function nextCactus() {
-        currentIndex = (currentIndex + 1) % cactusList.length;
-        loadCactus();
+// Load rating
+async function loadRating(id, box) {
+    try {
+        let totalRes = await fetch(`${API_BASE}/v1/${namespace}/${id}_total`);
+        let voteRes = await fetch(`${API_BASE}/v1/${namespace}/${id}_votes`);
+
+        let total = (await totalRes.json()).count || 0;
+        let votes = (await voteRes.json()).count || 0;
+
+        let avg = votes === 0 ? "No votes yet" : (total / votes).toFixed(2);
+
+        box.querySelector(".avg").innerText = avg;
+    } catch (err) {
+        console.error("Load failed", err);
     }
-
-    loadCactus();
+}
 </script>
+
 </body>
 </html>
