@@ -1,147 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Cactus Viewer 95</title>
-<style>
-  body { background-color: #008080; font-family: "Tahoma", sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-  
-  /* Window Styling */
-  .window { width: 400px; background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; box-shadow: 1px 1px 0 0 #000; padding: 2px; position: relative; }
-  
-  /* Title Bar Fixed */
-  .title-bar { background: linear-gradient(90deg, #000080, #1084d0); padding: 3px; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; font-size: 13px; height: 18px; }
-  .title-bar-controls { display: flex; gap: 2px; }
-  .title-bar-controls button { width: 16px; height: 14px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; line-height: 0; }
+    <meta charset="UTF-8">
+    <title>Cactus Viewer 95</title>
+    <style>
+        body { background-color: #008080; font-family: "Tahoma", sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        
+        /* Main Window */
+        .window { width: 400px; background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; box-shadow: 1px 1px 0 0 #000; padding: 2px; position: relative; }
+        
+        /* Title Bar */
+        .title-bar { background: linear-gradient(90deg, #000080, #1084d0); padding: 3px 5px; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; font-size: 13px; height: 18px; }
+        .title-bar-controls { display: flex; gap: 2px; }
+        .title-bar-controls button { width: 16px; height: 14px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; cursor: default; }
 
-  /* UI Elements */
-  .window-body { padding: 15px; text-align: center; }
-  .image-container { background: #000; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; margin-bottom: 10px; min-height: 200px; display: flex; justify-content: center; align-items: center; }
-  .image-container img { max-width: 100%; max-height: 250px; }
-  .rating-display { background: #ffffff; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 5px; margin: 10px 0; font-family: 'Courier New', monospace; font-weight: bold; }
-  
-  button.win95-btn { background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; padding: 4px 10px; cursor: pointer; font-family: "Tahoma"; font-size: 12px; }
-  button.win95-btn:active { border-color: #808080 #ffffff #ffffff #808080; }
-  button.win95-btn:disabled { color: #808080; }
+        .window-body { padding: 15px; text-align: center; }
+        
+        /* Image Display */
+        .image-container { background: #000; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; margin-bottom: 10px; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-  .hidden { display: none; }
+        /* Score Box */
+        .rating-display { background: #ffffff; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 5px; margin: 10px 0; font-family: 'Courier New', monospace; font-weight: bold; font-size: 14px; }
+        
+        /* Buttons */
+        .win95-btn { background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; padding: 4px 10px; cursor: pointer; font-family: "Tahoma"; font-size: 12px; outline: none; }
+        .win95-btn:active { border-color: #808080 #ffffff #ffffff #808080; padding: 5px 9px 3px 11px; }
+        .win95-btn:disabled { color: #808080; cursor: default; }
 
-  /* Custom Alert Box */
-  #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; z-index: 100; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-</style>
+        .hidden { display: none; }
+
+        /* Modern Alert Dialog */
+        #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; z-index: 1000; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); border: 2px solid #fff; }
+    </style>
 </head>
 <body>
 
 <div class="window">
-  <div class="title-bar">
-    <span>🌵 CactusViewer.exe</span>
-    <div class="title-bar-controls">
-      <button>_</button><button>□</button><button>X</button>
-    </div>
-  </div>
-
-  <div class="window-body">
-    <div class="cactus-box" id="box-1" data-id="texasron_cactus1">
-      <div class="image-container"><img src="cactus1.jpg"></div>
-      <div class="rating-display">Global Average: <span class="avg">0.00</span></div>
-      <div class="buttons"></div>
+    <div class="title-bar">
+        <span>🌵 CactusViewer.exe</span>
+        <div class="title-bar-controls">
+            <button>_</button><button>□</button><button>X</button>
+        </div>
     </div>
 
-    <div class="cactus-box hidden" id="box-2" data-id="texasron_cactus2">
-      <div class="image-container"><img src="cactus2.jpg"></div>
-      <div class="rating-display">Global Average: <span class="avg">0.00</span></div>
-      <div class="buttons"></div>
-    </div>
-
-    <button id="next-btn" class="win95-btn" style="width:100%; margin-top:10px;" disabled>Next Cactus >></button>
-  </div>
-
-  <div id="msg-box" class="window hidden">
-    <div class="title-bar"><span>CactusViewer</span></div>
     <div class="window-body">
-      <p style="font-size:12px">Vote Received!</p>
-      <button class="win95-btn" onclick="closeAlert()">OK</button>
+        <div class="cactus-box" id="box-1" data-id="texasron_cactus1">
+            <div class="image-container"><img src="cactus1.jpg" alt="Cactus 1"></div>
+            <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
+            <div class="btn-group"></div>
+        </div>
+
+        <div class="cactus-box hidden" id="box-2" data-id="texasron_cactus2">
+            <div class="image-container"><img src="cactus2.jpg" alt="Cactus 2"></div>
+            <div class="rating-display">Global Avg: <span class="avg">0.00</span></div>
+            <div class="btn-group"></div>
+        </div>
+
+        <button id="next-btn" class="win95-btn" style="width:100%; margin-top:15px; font-weight:bold" disabled>Next Cactus >> </button>
     </div>
-  </div>
+
+    <div id="msg-box" class="window hidden">
+        <div class="title-bar"><span>Message</span></div>
+        <div class="window-body">
+            <p style="margin: 0 0 10px 0; font-size: 12px;">Vote Received!</p>
+            <button class="win95-btn" onclick="closeAlert()">OK</button>
+        </div>
+    </div>
 </div>
 
 <script>
-const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; 
-const NAMESPACE = "texas-rons-team-3349";
-let currentIdx = 0;
-const boxes = document.querySelectorAll(".cactus-box");
-const nextBtn = document.getElementById("next-btn");
+    const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; 
+    const NAMESPACE = "texas-rons-team-3349";
+    let currentIdx = 0;
+    const boxes = document.querySelectorAll(".cactus-box");
+    const nextBtn = document.getElementById("next-btn");
 
-function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
+    function closeAlert() { 
+        document.getElementById('msg-box').classList.add('hidden'); 
+    }
 
-async function loadRating(id, box) {
-  const avgSpan = box.querySelector(".avg");
-  try {
-    const [tRes, vRes] = await Promise.all([
-      fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total?t=${Date.now()}`),
-      fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes?t=${Date.now()}`)
-    ]);
-    const tData = await tRes.json();
-    const vData = await vRes.json();
+    async function loadRating(id, box) {
+        const avgSpan = box.querySelector(".avg");
+        try {
+            const cacheBuster = `?t=${Date.now()}`;
+            const [tRes, vRes] = await Promise.all([
+                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total${cacheBuster}`),
+                fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes${cacheBuster}`)
+            ]);
+            
+            const tData = await tRes.json();
+            const vData = await vRes.json();
 
-    // FORCE NUMBERS: Sometimes API returns strings or nulls
-    const total = Number(tData.count) || 0;
-    const votes = Number(vData.count) || 0;
-    
-    const calculation = votes === 0 ? "0.00" : (total / votes).toFixed(2);
-    avgSpan.innerText = calculation;
-    console.log(`ID: ${id} | Total: ${total} | Votes: ${votes} | Avg: ${calculation}`);
-  } catch (e) { console.error("Load Error", e); }
-}
+            const total = Number(tData.count) || 0;
+            const votes = Number(vData.count) || 0;
+            
+            const result = votes === 0 ? "0.00" : (total / votes).toFixed(2);
+            avgSpan.innerText = result;
+            console.log(`Updated ${id}: ${total} / ${votes} = ${result}`);
+        } catch (e) {
+            console.error("Fetch error:", e);
+        }
+    }
 
-async function vote(id, score, box) {
-  const btns = box.querySelectorAll(".win95-btn");
-  btns.forEach(b => b.disabled = true); // Prevent spamming
-  
-  try {
-    // Submit
-    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: score })
+    async function handleVote(id, score, box) {
+        const btns = box.querySelectorAll(".win95-btn");
+        btns.forEach(b => b.disabled = true);
+        
+        try {
+            // POST to API
+            await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ amount: score })
+            });
+            await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
+
+            // Show confirmation
+            document.getElementById('msg-box').classList.remove('hidden');
+
+            // Recalculate after short server delay
+            setTimeout(() => {
+                loadRating(id, box);
+                nextBtn.disabled = false;
+            }, 500);
+
+        } catch (e) {
+            alert("Error connecting to server.");
+            btns.forEach(b => b.disabled = false);
+        }
+    }
+
+    // Setup Buttons
+    boxes.forEach(box => {
+        const id = box.dataset.id;
+        const container = box.querySelector(".btn-group");
+        for(let i=1; i<=5; i++) {
+            const b = document.createElement("button");
+            b.className = "win95-btn";
+            b.style.margin = "2px";
+            b.innerText = i;
+            b.onclick = () => handleVote(id, i, box);
+            container.appendChild(b);
+        }
+        loadRating(id, box);
     });
-    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`, { method: "POST" });
 
-    // 1. Show User Notification
-    document.getElementById('msg-box').classList.remove('hidden');
-
-    // 2. Wait for DB and recalculate
-    setTimeout(async () => {
-      await loadRating(id, box);
-      nextBtn.disabled = false;
-    }, 300);
-
-  } catch (e) {
-    alert("System Error: Vote not recorded.");
-    btns.forEach(b => b.disabled = false);
-  }
-}
-
-// Init Buttons
-boxes.forEach(box => {
-  const id = box.dataset.id;
-  const container = box.querySelector(".buttons");
-  for(let i=1; i<=5; i++) {
-    const b = document.createElement("button");
-    b.className = "win95-btn";
-    b.innerText = i;
-    b.onclick = () => vote(id, i, box);
-    container.appendChild(b);
-  }
-  loadRating(id, box);
-});
-
-nextBtn.onclick = () => {
-  boxes[currentIdx].classList.add("hidden");
-  currentIdx = (currentIdx + 1) % boxes.length;
-  boxes[currentIdx].classList.remove("hidden");
-  nextBtn.disabled = true;
-};
+    nextBtn.onclick = () => {
+        boxes[currentIdx].classList.add("hidden");
+        currentIdx = (currentIdx + 1) % boxes.length;
+        boxes[currentIdx].classList.remove("hidden");
+        nextBtn.disabled = true;
+    };
 </script>
+
 </body>
 </html>
