@@ -1,108 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Rate My Cactus 🌵</title>
-
-    <style>
-        body {
-            background: black;
-            color: #00FF00;
-            font-family: monospace;
-            text-align: center;
-        }
-
-        .cactus-box {
-            border: 2px dashed #FF00FF;
-            padding: 20px;
-            margin: 20px;
-            display: inline-block;
-        }
-
-        button {
-            background: black;
-            color: #00FFFF;
-            border: 1px solid #00FFFF;
-            cursor: pointer;
-        }
-
-        button:hover {
-            color: #FF00FF;
-            border-color: #FF00FF;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>🌵 Rate My Cactus 🌵</title>
+<style>
+  body {
+    background: black;
+    color: #00FF00;
+    font-family: "Courier New", monospace;
+    text-align: center;
+  }
+  h1 {
+    color: #FF00FF;
+    text-shadow: 2px 2px #00FFFF;
+    font-size: 3em;
+    margin-bottom: 10px;
+  }
+  .cactus-box {
+    border: 2px dashed #FF00FF;
+    display: inline-block;
+    margin: 20px;
+    padding: 20px;
+    width: 300px;
+  }
+  .cactus-box img {
+    width: 100%;
+    border: 4px solid #00FF00;
+  }
+  .buttons button {
+    margin: 3px;
+    background: black;
+    color: #00FFFF;
+    border: 1px solid #00FFFF;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .buttons button:hover {
+    color: #FF00FF;
+    border-color: #FF00FF;
+  }
+  .avg {
+    font-weight: bold;
+    color: #FFFF00;
+  }
+</style>
 </head>
-
 <body>
 
 <h1>🌵 RATE MY CACTUS 🌵</h1>
 
+<!-- Cactus 1 -->
 <div class="cactus-box" data-id="texasron_cactus1">
-    <img src="cactus1.jpg" style="width:250px; border:4px solid #00FF00;">
-    <p>Average Rating: <span class="avg">Loading...</span></p>
-    <div class="buttons"></div>
+  <img src="cactus1.jpg" alt="Cactus 1">
+  <p>Average Rating: <span class="avg">Loading...</span></p>
+  <div class="buttons"></div>
 </div>
 
+<!-- Cactus 2 -->
 <div class="cactus-box" data-id="texasron_cactus2">
-    <img src="cactus2.jpg" style="width:250px; border:4px solid #FF00FF;">
-    <p>Average Rating: <span class="avg">Loading...</span></p>
-    <div class="buttons"></div>
+  <img src="cactus2.jpg" alt="Cactus 2">
+  <p>Average Rating: <span class="avg">Loading...</span></p>
+  <div class="buttons"></div>
 </div>
 
 <script>
-// ========================
-// Replace this with your deployed Worker URL
-const API_BASE = "https://texasron.texasroncactus.workers.dev/api";
-const namespace = "texas-rons-team-3349";
+// ===== CONFIG =====
+const API_BASE = "https://texasron.texasroncactus.workers.dev/api"; // <-- your deployed worker
+const NAMESPACE = "texas-rons-team-3349";
 
+// ===== SETUP CACTUS BOXES =====
 document.querySelectorAll(".cactus-box").forEach(box => {
-    const id = box.dataset.id;
-    const btnContainer = box.querySelector(".buttons");
+  const id = box.dataset.id;
+  const btnContainer = box.querySelector(".buttons");
 
-    // Create buttons 1–10
-    for (let i = 1; i <= 10; i++) {
-        let btn = document.createElement("button");
-        btn.innerText = i;
-        btn.style.margin = "3px";
+  // Create buttons 1–10
+  for (let i = 1; i <= 10; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    btn.onclick = () => vote(id, i, box);
+    btnContainer.appendChild(btn);
+  }
 
-        btn.onclick = () => vote(id, i, box);
-        btnContainer.appendChild(btn);
-    }
-
-    loadRating(id, box);
+  loadRating(id, box);
 });
 
-// Vote function
+// ===== VOTE FUNCTION =====
 async function vote(id, score, box) {
-    try {
-        console.log("Voting:", id, score);
+  try {
+    // Update total score
+    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total/up?amount=${score}`);
+    // Increment vote count
+    await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes/up`);
 
-        await fetch(`${API_BASE}/v1/${namespace}/${id}_total/up?amount=${score}`);
-        await fetch(`${API_BASE}/v1/${namespace}/${id}_votes/up`);
+    alert("Thanks for rating! 🌵");
 
-        alert("THANKS FOR RATING!!! 🌵");
-
-        loadRating(id, box);
-    } catch (err) {
-        console.error("Vote failed", err);
-    }
+    // Refresh average
+    loadRating(id, box);
+  } catch (err) {
+    console.error("Vote failed", err);
+  }
 }
 
-// Load rating
+// ===== LOAD AVERAGE =====
 async function loadRating(id, box) {
-    try {
-        let totalRes = await fetch(`${API_BASE}/v1/${namespace}/${id}_total`);
-        let voteRes = await fetch(`${API_BASE}/v1/${namespace}/${id}_votes`);
+  try {
+    const totalRes = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_total`);
+    const votesRes = await fetch(`${API_BASE}/v1/${NAMESPACE}/${id}_votes`);
 
-        let total = (await totalRes.json()).count || 0;
-        let votes = (await voteRes.json()).count || 0;
+    const total = (await totalRes.json()).count || 0;
+    const votes = (await votesRes.json()).count || 0;
 
-        let avg = votes === 0 ? "No votes yet" : (total / votes).toFixed(2);
-
-        box.querySelector(".avg").innerText = avg;
-    } catch (err) {
-        console.error("Load failed", err);
-    }
+    const avg = votes === 0 ? "No votes yet" : (total / votes).toFixed(2);
+    box.querySelector(".avg").innerText = avg;
+  } catch (err) {
+    console.error("Load failed", err);
+  }
 }
 </script>
 
