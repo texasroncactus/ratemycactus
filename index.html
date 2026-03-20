@@ -211,11 +211,51 @@
         </a>
     </div>
 
+<div id="completion-msg" class="hidden">
+                <div class="rating-display" style="color: #0ff; border-color: #0ff;">
+                    🌟 ALL SPECIMENS EVALUATED 🌟
+                </div>
+                <p style="font-weight: bold;">You have successfully rated all available cacti. Check back later for new data!</p>
+                <button class="win95-btn" onclick="resetProgress()" style="font-size: 10px; margin-top: 10px;">[ Reset My Data ]</button>
+            </div>
+
+            <button id="next-btn" class="win95-btn" style="width:100%; margin-top:15px; height: 50px; font-size: 18px;" disabled>FETCH NEXT SPECIMEN >> </button>
+        </div>
+
 <script>
     const API_BASE = "https://texasron.texasroncactus.workers.dev/api/v1/texas-rons-team-3349";
-    let currentIdx = 0;
     const boxes = document.querySelectorAll(".cactus-box");
     const nextBtn = document.getElementById("next-btn");
+    const completionMsg = document.getElementById("completion-msg");
+    
+    // 1. Check if they already finished
+    let currentIdx = parseInt(localStorage.getItem('cactus_progress')) || 0;
+
+    function init() {
+        if (localStorage.getItem('cactus_done') === 'true') {
+            showCompletion();
+        } else {
+            showBox(currentIdx);
+        }
+    }
+
+    function showBox(index) {
+        boxes.forEach((box, i) => {
+            box.classList.toggle("hidden", i !== index);
+            if (i === index) loadRating(box.dataset.id, box);
+        });
+    }
+
+    function showCompletion() {
+        boxes.forEach(box => box.classList.add("hidden"));
+        nextBtn.classList.add("hidden");
+        completionMsg.classList.remove("hidden");
+    }
+
+    function resetProgress() {
+        localStorage.clear();
+        location.reload();
+    }
 
     function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
 
@@ -269,15 +309,22 @@
             b.onclick = () => handleVote(id, i, box);
             container.appendChild(b);
         }
-        loadRating(id, box);
     });
 
     nextBtn.onclick = () => {
-        boxes[currentIdx].classList.add("hidden");
-        currentIdx = (currentIdx + 1) % boxes.length;
-        boxes[currentIdx].classList.remove("hidden");
-        nextBtn.disabled = true;
+        currentIdx++;
+        if (currentIdx >= boxes.length) {
+            localStorage.setItem('cactus_done', 'true');
+            showCompletion();
+        } else {
+            localStorage.setItem('cactus_progress', currentIdx);
+            showBox(currentIdx);
+            nextBtn.disabled = true;
+        }
     };
+
+    // Run on startup
+    init();
 </script>
 </body>
 </html>
