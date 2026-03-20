@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RateMyCactus.Com - Cactus Viewer 95</title>
+    <title>Boofus Maximus v1</title>
     <style>
         /* 90s Retro Funky Background */
         body { 
@@ -33,10 +33,23 @@
             font-weight: 900;
             color: #ff00ff;
             text-shadow: 3px 3px #00ffff, 6px 6px #000080;
-            margin: 20px 0;
+            margin: 20px 0 5px 0; /* Tightened margin */
             font-style: italic;
             letter-spacing: -2px;
             transform: rotate(-2deg);
+        }
+
+        /* NEW: Hall of Fame Notice */
+        .hof-notice {
+            background: #ffff00;
+            color: #000;
+            border: 2px dashed #ff0000;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            max-width: 580px;
+            box-shadow: 4px 4px 0px #000;
         }
 
         /* MAIN WINDOW */
@@ -131,6 +144,10 @@
 
     <h1 class="site-header">RateMyCactus.Com</h1>
 
+    <div class="hof-notice">
+        📢 The winning cactus on 3/27 will be added to the "RateMyCactus" hall of fame page. After then, new photos will be uploaded and the voting starts again.
+    </div>
+
     <div class="window">
         <div class="title-bar">
             <span>🌵 CactusViewer_Pro_v1.0.exe</span>
@@ -189,6 +206,14 @@
                 <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
             </div>
 
+            <div id="completion-msg" class="hidden">
+                <div class="rating-display" style="color: #0ff; border-color: #0ff;">
+                    🌟 ALL SPECIMENS EVALUATED 🌟
+                </div>
+                <p style="font-weight: bold; color: #000;">You have successfully rated all available cacti. Check back later for new data!</p>
+                <button class="win95-btn" onclick="resetProgress()" style="font-size: 10px; margin-top: 10px;">[ Reset My Data ]</button>
+            </div>
+
             <button id="next-btn" class="win95-btn" style="width:100%; margin-top:15px; height: 50px; font-size: 18px;" disabled>FETCH NEXT SPECIMEN >> </button>
         </div>
 
@@ -211,22 +236,12 @@
         </a>
     </div>
 
-<div id="completion-msg" class="hidden">
-                <div class="rating-display" style="color: #0ff; border-color: #0ff;">
-                    🌟 ALL SPECIMENS EVALUATED 🌟
-                </div>
-                <p style="font-weight: bold;">You have successfully rated all available cacti. Check back later for new data!</p>
-                <button class="win95-btn" onclick="resetProgress()" style="font-size: 10px; margin-top: 10px;">[ Reset My Data ]</button>
-            </div>
-
-  
 <script>
     const API_BASE = "https://texasron.texasroncactus.workers.dev/api/v1/texas-rons-team-3349";
     const boxes = document.querySelectorAll(".cactus-box");
     const nextBtn = document.getElementById("next-btn");
     const completionMsg = document.getElementById("completion-msg");
     
-    // 1. Check if they already finished
     let currentIdx = parseInt(localStorage.getItem('cactus_progress')) || 0;
 
     function init() {
@@ -321,7 +336,6 @@
         }
     };
 
-    // Run on startup
     init();
 </script>
 </body>
