@@ -50,19 +50,33 @@
             position: relative; 
         }
 
-        .title-bar { background: linear-gradient(90deg, #800080, #ff00ff); padding: 4px 6px; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; font-size: 14px; height: 22px; }
-        .title-bar-controls { display: flex; gap: 2px; }
-        .title-bar-controls button { width: 18px; height: 16px; font-size: 10px; background: #c0c0c0; border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; display: flex; justify-content: center; align-items: center; padding: 0; font-weight: bold; }
+        .title-bar { 
+            background: linear-gradient(90deg, #800080, #ff00ff); 
+            padding: 4px 6px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 14px; 
+            height: 22px; 
+        }
+
+        .title-bar-controls button { 
+            width: 18px; height: 16px; font-size: 10px; background: #c0c0c0; 
+            border: 1px solid; border-color: #ffffff #808080 #808080 #ffffff; 
+            font-weight: bold; 
+        }
         
         .window-body { padding: 20px; text-align: center; }
         
-        /* Submission Hint Text */
         .admin-note {
-            font-size: 10px;
+            font-size: 11px;
             color: #444;
             margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: bold;
+            border-bottom: 1px dotted #808080;
+            padding-bottom: 5px;
         }
 
         .image-container { 
@@ -75,8 +89,195 @@
             align-items: center; 
             overflow: hidden;
         }
-        .image-container img { max-width: 100%; max-height: 100%; image-rendering: auto; }
+        .image-container img { max-width: 100%; max-height: 100%; }
         
-        .rating-display { background: #000; border: 2px inset #fff; padding: 12px; margin: 15px 0; font-family: 'Courier New', monospace; font-weight: bold; font-size: 22px; color: #0f0; text-shadow: 0 0 5px #0f0; }
+        .rating-display { 
+            background: #000; border: 2px inset #fff; padding: 12px; 
+            margin: 15px 0; font-family: 'Courier New', monospace; 
+            font-weight: bold; font-size: 22px; color: #0f0; 
+            text-shadow: 0 0 5px #0f0; 
+        }
         
-        .status-bar { border-top: 1px solid #808080; margin-top: 15px; padding-top
+        .status-bar { 
+            border-top: 1px solid #808080; margin-top: 15px; 
+            padding-top: 8px; font-size: 12px; text-align: left; 
+            color: #000; font-weight: bold; 
+        }
+        
+        .win95-btn { 
+            background: #c0c0c0; border: 2px solid; 
+            border-color: #ffffff #808080 #808080 #ffffff; 
+            padding: 8px 18px; cursor: pointer; font-size: 14px; 
+            margin: 4px; font-family: "Tahoma"; font-weight: bold; 
+        }
+        .win95-btn:active { border-color: #808080 #ffffff #ffffff #808080; padding: 9px 17px 7px 19px; }
+        .win95-btn:disabled { color: #808080; }
+        
+        .hidden { display: none; }
+        
+        .submit-callout {
+            margin-top: 40px; font-weight: bold; background: yellow; 
+            color: black; padding: 5px 15px; border: 2px dashed red; 
+            text-decoration: none; display: inline-block; transform: scale(1.1);
+        }
+
+        .footer-area { margin-top: 15px; padding-bottom: 40px; text-align: center; }
+        .gif-link img { max-width: 450px; border: 3px solid #ff00ff; box-shadow: 5px 5px 0 #000; }
+
+        #msg-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 250px; z-index: 1000; }
+    </style>
+</head>
+<body>
+
+    <h1 class="site-header">RateMyCactus.Com</h1>
+
+    <div class="window">
+        <div class="title-bar">
+            <span>🌵 CactusViewer_Pro_v1.0.exe</span>
+            <div class="title-bar-controls"><button>_</button><button>□</button><button>X</button></div>
+        </div>
+
+        <div class="window-body">
+            <div class="admin-note">NOTE: SUBMIT PHOTOS AT THE OUTPOST BELOW</div>
+
+            <div class="cactus-box" id="box-1" data-id="malo8colossus_txt">
+                <div class="image-container"><img src="malo8colossus_txt.png" alt="Cactus 1"></div>
+                <div class="rating-display">SYSTEM_AVG: <span class="avg">0.00</span></div>
+                <div class="btn-group"></div>
+                <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
+            </div>
+
+            <div class="cactus-box hidden" id="box-2" data-id="HULKDALLS">
+                <div class="image-container"><img src="HULKDALLS.jpg" alt="Cactus 2"></div>
+                <div class="rating-display">SYSTEM_AVG: <span class="avg">0.00</span></div>
+                <div class="btn-group"></div>
+                <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
+            </div>
+
+            <div class="cactus-box hidden" id="box-3" data-id="hulkballstxt">
+                <div class="image-container"><img src="hulkballstxt.jpg" alt="Cactus 3"></div>
+                <div class="rating-display">SYSTEM_AVG: <span class="avg">0.00</span></div>
+                <div class="btn-group"></div>
+                <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
+            </div>
+
+            <div class="cactus-box hidden" id="box-4" data-id="ht">
+                <div class="image-container"><img src="ht.jpg" alt="Cactus 4"></div>
+                <div class="rating-display">SYSTEM_AVG: <span class="avg">0.00</span></div>
+                <div class="btn-group"></div>
+                <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
+            </div>
+
+            <div class="cactus-box hidden" id="box-5" data-id="ElChapo3">
+                <div class="image-container"><img src="ElChapo3.jpg" alt="Cactus 5"></div>
+                <div class="rating-display">SYSTEM_AVG: <span class="avg">0.00</span></div>
+                <div class="btn-group"></div>
+                <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
+            </div>
+
+            <div class="cactus-box hidden" id="box-6" data-id="BluePeru2">
+                <div class="image-container"><img src="BluePeru2.jpg" alt="Cactus 6"></div>
+                <div class="rating-display">SYSTEM_AVG: <span class="avg">0.00</span></div>
+                <div class="btn-group"></div>
+                <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
+            </div>
+
+            <div class="cactus-box hidden" id="box-7" data-id="banana">
+                <div class="image-container"><img src="banana.jpg" alt="Cactus 7"></div>
+                <div class="rating-display">SYSTEM_AVG: <span class="avg">0.00</span></div>
+                <div class="btn-group"></div>
+                <div class="status-bar">VOTES_LOGGED: <span class="v-count">0</span></div>
+            </div>
+
+            <button id="next-btn" class="win95-btn" style="width:100%; margin-top:15px; height: 50px; font-size: 18px;" disabled>FETCH NEXT SPECIMEN >> </button>
+        </div>
+
+        <div id="msg-box" class="window hidden">
+            <div class="title-bar"><span>SYSTEM MESSAGE</span></div>
+            <div class="window-body">
+                <p style="font-size: 14px; margin-bottom:15px; font-weight: bold;">DATA RECORDED!</p>
+                <button class="win95-btn" onclick="closeAlert()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://texasroncactus.neocities.org" class="submit-callout">
+        TO SUBMIT A CACTUS PHOTO, GO TO TEXAS RON'S OUTPOST!
+    </a>
+
+    <div class="footer-area">
+        <a href="https://texasroncactus.neocities.org" target="_blank" class="gif-link">
+            <img src="TexasRonBannerAnimated.gif" alt="Texas Ron Animated Banner">
+        </a>
+    </div>
+
+<script>
+    const API_BASE = "https://texasron.texasroncactus.workers.dev/api/v1/texas-rons-team-3349";
+    let currentIdx = 0;
+    const boxes = document.querySelectorAll(".cactus-box");
+    const nextBtn = document.getElementById("next-btn");
+
+    function closeAlert() { document.getElementById('msg-box').classList.add('hidden'); }
+
+    async function getRawData(id) {
+        const cb = `?t=${Date.now()}`;
+        try {
+            const [tRes, vRes] = await Promise.all([
+                fetch(`${API_BASE}/${id}_total${cb}`),
+                fetch(`${API_BASE}/${id}_votes${cb}`)
+            ]);
+            const tData = await tRes.json();
+            const vData = await vRes.json();
+            return { total: Number(tData.count) || 0, votes: Number(vData.count) || 0 };
+        } catch(e) { return { total: 0, votes: 0 }; }
+    }
+
+    async function loadRating(id, box) {
+        const stats = await getRawData(id);
+        const result = stats.votes === 0 ? "0.00" : (stats.total / stats.votes).toFixed(2);
+        box.querySelector(".avg").innerText = result;
+        box.querySelector(".v-count").innerText = stats.votes;
+    }
+
+    async function handleVote(id, score, box) {
+        const btns = box.querySelectorAll(".win95-btn");
+        btns.forEach(b => b.disabled = true);
+        try {
+            const current = await getRawData(id);
+            const nextTotal = current.total + Number(score);
+            const nextVotes = current.votes + 1;
+            await Promise.all([
+                fetch(`${API_BASE}/${id}_total/set?count=${nextTotal}`),
+                fetch(`${API_BASE}/${id}_votes/set?count=${nextVotes}`)
+            ]);
+            document.getElementById('msg-box').classList.remove('hidden');
+            box.querySelector(".avg").innerText = (nextTotal / nextVotes).toFixed(2);
+            box.querySelector(".v-count").innerText = nextVotes;
+            nextBtn.disabled = false;
+        } catch (e) {
+            btns.forEach(b => b.disabled = false);
+        }
+    }
+
+    boxes.forEach(box => {
+        const id = box.dataset.id;
+        const container = box.querySelector(".btn-group");
+        for(let i=1; i<=5; i++) {
+            const b = document.createElement("button");
+            b.className = "win95-btn";
+            b.innerText = i;
+            b.onclick = () => handleVote(id, i, box);
+            container.appendChild(b);
+        }
+        loadRating(id, box);
+    });
+
+    nextBtn.onclick = () => {
+        boxes[currentIdx].classList.add("hidden");
+        currentIdx = (currentIdx + 1) % boxes.length;
+        boxes[currentIdx].classList.remove("hidden");
+        nextBtn.disabled = true;
+    };
+</script>
+</body>
+</html>
